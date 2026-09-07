@@ -23,7 +23,7 @@
   --accent-bright: #14b8a6;
   --accent-soft: #f0fdfa;
   --accent-tint: #ccfbf1;
-  --header: #18181b;
+  --header: #18181bf0;
   --border: #e4e4e7;
   --danger: #dc2626;
   --reward: #fbbf24;
@@ -71,7 +71,7 @@ body {
 }
 
 header {
-  background: #18181b;
+  background: #18181bf0;
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
@@ -134,8 +134,8 @@ header .header_container > a.numberlink_nav:focus-visible {
 }
 
 .header_container {
-  margin: 0;
-  padding: 10px 0;
+  padding: 8px;
+  margin: 10px 0;
   background-color: transparent;
   min-height: 60px;
   flex-wrap: nowrap !important;
@@ -165,6 +165,7 @@ header .header_container > a.numberlink_nav:focus-visible {
   header .header_container > .numberlink_nav {
     margin-left: 40px;
     margin-right: 6px;
+    width: 64px;
   }
 
   header .header_container > .numberlink_nav + a {
@@ -219,7 +220,7 @@ header .header_container > a.numberlink_nav:focus-visible {
   align-items: center;
   justify-content: center;
   margin-left: 40px;
-  padding: 4px;
+  padding: 4px 4px 4px 8px;
   border-radius: var(--radius-btn);
   cursor: pointer;
 }
