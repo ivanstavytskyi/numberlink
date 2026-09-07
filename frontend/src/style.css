@@ -71,7 +71,7 @@ body {
 }
 
 header {
-  background: #18181bf0;
+  background: #18181b;
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
