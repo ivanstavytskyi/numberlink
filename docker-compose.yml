@@ -27,7 +27,7 @@ services:
         image: backend-image:latest
         container_name: backend-spring-boot
         environment:
-            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+            SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_URL}/${DB_NAME}
             SPRING_DATASOURCE_USERNAME: ${DB_USER}
             SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
             GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
