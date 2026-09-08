@@ -702,7 +702,7 @@ nav {
   border: none;
   border-radius: 8px;
   min-height: 40px;
-  margin: 0;
+  margin: 6px 0;
   padding: 0 10px;
   font-family: inherit;
   font-size: 0.875rem;
@@ -2578,8 +2578,8 @@ nav {
 
 .guest-gate__title {
   margin: 0;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
-  font-size: 1.35rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.55rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
