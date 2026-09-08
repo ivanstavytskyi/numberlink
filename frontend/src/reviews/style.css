@@ -302,12 +302,12 @@ nav {
 
 .lb_empty_title {
   margin: 0;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 1.0625rem; 
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  color: var(--ink);
+  color: #303030;
   text-wrap: balance;
 }
 
@@ -2932,6 +2932,7 @@ body.guest-locked .field_container {
   }
 
   .header_auth .auth-btn {
+    font-weight: 500;
     transition: none;
   }
 
@@ -3113,8 +3114,8 @@ body.guest-locked .field_container {
   padding: 14px 32px;
   background-color: #0d9488;
   color: #ffffff;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
-  font-size: 0.95rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -3256,8 +3257,8 @@ body.guest-locked .field_container {
 }
 
 .github_star_title {
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
-  font-size: 0.98rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
   font-weight: 700;
   color: #0f766e;
   line-height: 1.3;
@@ -3279,7 +3280,7 @@ body.guest-locked .field_container {
   border-radius: 12px;
   background: #0d9488;
   color: #ffffff;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.01em;

@@ -302,12 +302,12 @@ nav {
 
 .lb_empty_title {
   margin: 0;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 1.0625rem; 
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  color: var(--ink);
+  color: #303030;
   text-wrap: balance;
 }
 
@@ -2932,6 +2932,7 @@ body.guest-locked .field_container {
   }
 
   .header_auth .auth-btn {
+    font-weight: 500;
     transition: none;
   }
 

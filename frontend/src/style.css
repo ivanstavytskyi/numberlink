@@ -314,12 +314,12 @@ nav {
 
 .lb_empty_title {
   margin: 0;
-  font-family: 'Nunito Bold', 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 1.0625rem;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  color: var(--ink);
+  color: #303030;
   text-wrap: balance;
 }
 
@@ -3018,6 +3018,7 @@ body.guest-locked main .mt-4.container-fluid {
   }
 
   .header_auth .auth-btn {
+    font-weight: 500;
     transition: none;
   }
 
@@ -3225,8 +3226,8 @@ body:has(#main) #play_button {
 }
 
 #table_container.unactive {
-  opacity: 0.45;
-  filter: grayscale(0.15);
+  opacity: 1;
+  filter: none;
 }
 
 #btn_container {
@@ -3511,7 +3512,7 @@ mwc-select {
   margin: 1.25rem auto 1rem !important;
   border-collapse: separate;
   border-spacing: 0;
-  border: 2px solid var(--accent-deep);
+  border: 2px solid #99f6e4;
   border-radius: 14px;
   overflow: hidden;
   background: var(--surface);
@@ -3542,7 +3543,7 @@ mwc-select {
   color: white;
   text-align: center;
   padding: 0;
-  border: 1px solid rgba(15, 118, 110, 0.28);
+  border: 1px solid rgba(13, 148, 136, 0.32);
   box-sizing: border-box;
   width: clamp(30px, calc((100vh - 300px) / 9), 64px);
   height: clamp(30px, calc((100vh - 300px) / 9), 64px);
