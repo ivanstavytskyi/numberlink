@@ -41,6 +41,9 @@ services:
             MAIL_FROM: ${MAIL_FROM:-}
             SMTP_STARTTLS: ${SMTP_STARTTLS:-true}
             SMTP_SSL: ${SMTP_SSL:-false}
+            CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ALLOWED_ORIGIN_PATTERNS:-http://localhost:*,http://127.0.0.1:*}
+            FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:7000}
+            BACKEND_BASE_URL: ${BACKEND_BASE_URL:-http://localhost:8000}
         build:
             context: ./backend
             dockerfile: ../docker/backend/Dockerfile
@@ -63,6 +66,7 @@ services:
         container_name: frontend-vite
         environment:
             BACKEND_PROXY: http://backend:8000
+            VITE_ALLOWED_HOSTS: ${VITE_ALLOWED_HOSTS:-}
         build:
             context: ./frontend
             dockerfile: ../docker/frontend/Dockerfile
