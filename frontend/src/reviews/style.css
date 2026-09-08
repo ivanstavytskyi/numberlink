@@ -2932,7 +2932,6 @@ body.guest-locked .field_container {
   }
 
   .header_auth .auth-btn {
-    font-weight: 500;
     transition: none;
   }
 

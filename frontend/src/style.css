@@ -3018,7 +3018,6 @@ body.guest-locked main .mt-4.container-fluid {
   }
 
   .header_auth .auth-btn {
-    font-weight: 500;
     transition: none;
   }
 
@@ -3512,7 +3511,7 @@ mwc-select {
   margin: 1.25rem auto 1rem !important;
   border-collapse: separate;
   border-spacing: 0;
-  border: 2px solid #99f6e4;
+  border: 2px solid #57c3af;
   border-radius: 14px;
   overflow: hidden;
   background: var(--surface);
