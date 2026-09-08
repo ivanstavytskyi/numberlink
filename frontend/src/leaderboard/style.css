@@ -3051,6 +3051,8 @@ body {
 }
 
 .leaderboard_head_wrap {
+  position: relative;
+  z-index: 5;
   min-width: 0;
 }
 
@@ -3131,6 +3133,7 @@ body {
 }
 
 .leaderboard_period_menu {
+  z-index: 6;
   margin-top: 6px !important;
   min-width: 168px;
   padding: 8px;
