@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -156,9 +157,25 @@ public class OauthService {
         }
     }
 
-    private static void applyProfile(OauthUserEntity link, ParsedProfile profile) {
+    private void applyProfile(OauthUserEntity link, ParsedProfile profile) {
         link.setDisplayName(truncate(profile.displayName(), 255));
         link.setEmail(blankToNull(profile.email()));
+        applyAvatarIfNeeded(link.getUser(), profile.avatarUrl());
+    }
+
+    private void applyAvatarIfNeeded(UserEntity user, String avatarUrl) {
+        if (user == null || !StringUtils.hasText(avatarUrl)) {
+            return;
+        }
+        String current = user.getAvatarUrl();
+        if (StringUtils.hasText(current) && current.startsWith("/uploads/avatars/")) {
+            return;
+        }
+        if (avatarUrl.equals(current)) {
+            return;
+        }
+        user.setAvatarUrl(avatarUrl);
+        userRepository.save(user);
     }
 
     private UserEntity resolveUser(ParsedProfile profile) {
@@ -175,6 +192,7 @@ public class OauthService {
             user.setEmail(profile.email());
         }
         user.setUsername(uniqueUsername(profile.username()));
+        user.setAvatarUrl(profile.avatarUrl());
         user.setCreatedAt(Instant.now());
         return userRepository.saveAndFlush(user);
     }
@@ -243,7 +261,8 @@ public class OauthService {
                 emailLocalPart(normalizedEmail)
         );
         String username = firstNonBlank(emailLocalPart(normalizedEmail), stringAttr(attrs, "given_name"), "google_" + sub);
-        return new ParsedProfile(sub, normalizedEmail, username, displayName);
+        String avatarUrl = sanitizeAvatarUrl(stringAttr(attrs, "picture"));
+        return new ParsedProfile(sub, normalizedEmail, username, displayName, avatarUrl);
     }
 
     private static String emailLocalPart(String email) {
@@ -268,7 +287,27 @@ public class OauthService {
         String displayName = firstNonBlank(stringAttr(attrs, "name"), login, "GitHub");
         String username = firstNonBlank(login, stringAttr(attrs, "name"), "github_" + sub);
         String normalizedEmail = StringUtils.hasText(email) ? email.trim().toLowerCase(Locale.ROOT) : null;
-        return new ParsedProfile(sub, normalizedEmail, username, displayName);
+        String avatarUrl = sanitizeAvatarUrl(firstNonBlank(
+                stringAttr(attrs, "avatar_url"),
+                stringAttr(attrs, "avatarUrl")
+        ));
+        return new ParsedProfile(sub, normalizedEmail, username, displayName, avatarUrl);
+    }
+
+    static String sanitizeAvatarUrl(String raw) {
+        if (!StringUtils.hasText(raw) || "player".equals(raw)) {
+            return null;
+        }
+        String url = raw.trim();
+        try {
+            URI uri = URI.create(url);
+            if (!"https".equalsIgnoreCase(uri.getScheme()) || uri.getHost() == null || uri.getHost().isBlank()) {
+                return null;
+            }
+            return truncate(url, 2048);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     private static String stringAttr(Map<String, Object> attrs, String key) {
@@ -285,5 +324,5 @@ public class OauthService {
         return "player";
     }
 
-    private record ParsedProfile(String sub, String email, String username, String displayName) {}
+    private record ParsedProfile(String sub, String email, String username, String displayName, String avatarUrl) {}
 }

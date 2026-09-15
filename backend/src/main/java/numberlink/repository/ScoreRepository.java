@@ -11,4 +11,6 @@ public interface ScoreRepository extends JpaRepository<ScoreEntity, Long> {
     List<ScoreEntity> findAllByOrderByScoreResultDesc();
 
     Optional<ScoreEntity> findFirstByUser_IdOrderByScoreResultDesc(UUID userId);
+
+    List<ScoreEntity> findAllByUser_IdOrderByPlayedAtDesc(UUID userId);
 }
