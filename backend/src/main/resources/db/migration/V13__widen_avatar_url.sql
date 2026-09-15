@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ALTER COLUMN avatar_url TYPE VARCHAR(2048);
