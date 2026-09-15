@@ -1,6 +1,7 @@
 package numberlink.controller;
 
 import numberlink.dto.score.request.ScoreRequestDto;
+import numberlink.dto.score.response.ScoreHistoryDto;
 import numberlink.dto.score.response.ScoreResponseDto;
 import numberlink.dto.score.response.ScoreResponseSelfDto;
 import numberlink.entity.UserEntity;
@@ -53,7 +54,10 @@ public class ScoreServiceRest {
             ));
         }
 
-        scoreService.addScore(user, scoreRequestDto.getElapsedSeconds(), width, height);
+        Object hintsUsedObj = session.getAttribute("hints_used");
+        int hints = (hintsUsedObj instanceof Integer value) ? value : 0;
+
+        scoreService.addScore(user, scoreRequestDto.getElapsedSeconds(), width, height, hints);
         return ResponseEntity.ok(Map.of("status", "ok"));
     }
 
@@ -72,5 +76,11 @@ public class ScoreServiceRest {
         ScoreResponseSelfDto dto = scoreService.getTopScore(user.getId(), user.getUsername());
         dto.setAvatarUrl(user.getAvatarUrl());
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/history")
+    public List<ScoreHistoryDto> getHistory() {
+        UserEntity user = authService.requireCurrentUser();
+        return scoreService.getHistory(user.getId());
     }
 }
