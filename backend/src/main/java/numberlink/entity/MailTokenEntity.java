@@ -1,6 +1,5 @@
 package numberlink.entity;
 
-import numberlink.entity.enums.MailTokenAction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,10 +7,9 @@ import lombok.ToString;
 
 import java.time.Instant;
 
-@ToString
 @Setter
 @Getter
-@Table(name = "email_tokens")
+@Table(name = "email_verification_tokens")
 @Entity(name = "MailToken")
 public class MailTokenEntity {
     @Id
@@ -21,10 +19,6 @@ public class MailTokenEntity {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action", nullable = false, length = 32)
-    private MailTokenAction action = MailTokenAction.EMAIL_VERIFY;
 
     @Column(name = "token_hash", unique = true, nullable = false, length = 64)
     private String tokenHash;
