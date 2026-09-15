@@ -16,6 +16,7 @@ public class ScoreResponseDto {
     private double avgElapsedSeconds;
     private double avgScore;
     private int points;
+    private int hints;
 
     public ScoreResponseDto(
             String player,
@@ -25,7 +26,8 @@ public class ScoreResponseDto {
             int fieldHeight,
             double avgElapsedSeconds,
             double avgScore,
-            int points
+            int points,
+            int hints
     ) {
         this.player = player;
         this.avatarUrl = avatarUrl;
@@ -35,5 +37,6 @@ public class ScoreResponseDto {
         this.avgElapsedSeconds = avgElapsedSeconds;
         this.avgScore = avgScore;
         this.points = points;
+        this.hints = hints;
     }
 }
