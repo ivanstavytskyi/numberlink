@@ -16,18 +16,21 @@ public class ScoreResponseSelfDto {
     private BigDecimal avgScore;
     private Integer points;
     private Long rank;
+    private Integer hints;
 
     public ScoreResponseSelfDto(
             String player,
             BigDecimal avgElapsedSeconds,
             BigDecimal avgScore,
             Integer points,
-            Long rank
+            Long rank,
+            Integer hints
     ) {
         this.player = player;
         this.avgElapsedSeconds = avgElapsedSeconds;
         this.avgScore = avgScore;
         this.points = points;
         this.rank = rank;
+        this.hints = hints;
     }
 }
