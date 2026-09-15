@@ -1,5 +1,6 @@
 package numberlink.service.jpa;
 
+import numberlink.dto.score.response.ScoreHistoryDto;
 import numberlink.dto.score.response.ScoreResponseDto;
 import numberlink.dto.score.response.ScoreResponseSelfDto;
 import numberlink.entity.UserEntity;
@@ -13,5 +14,7 @@ public interface ScoreService {
 
     ScoreResponseSelfDto getTopScore(UUID userId, String username);
 
-    void addScore(UserEntity user, int elapsedSeconds, int width, int height);
+    List<ScoreHistoryDto> getHistory(UUID userId);
+
+    void addScore(UserEntity user, int elapsedSeconds, int width, int height, int hints);
 }
