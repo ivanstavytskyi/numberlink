@@ -117,34 +117,29 @@ CREATE TABLE share_results
     share_token UUID DEFAULT gen_random_uuid() NOT NULL UNIQUE,
     game_id BIGINT NOT NULL references user_scores(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
+);
 
--- CREATE INDEX idx_score_leaderboard
--- ON score (score_result DESC, played_at DESC);
---
--- CREATE INDEX idx_email_verification_tokens_user_id
--- ON email_verification_tokens (user_id);
---
--- CREATE INDEX idx_email_tokens_user_action_unused
--- ON email_verification_tokens (user_id, action)
--- WHERE used_at IS NULL;
---
--- CREATE INDEX idx_rating_commented_on
--- ON rating (commented_on DESC)
--- WHERE content IS NOT NULL;
+CREATE UNIQUE INDEX uq_users_email_lower
+    ON users (LOWER(email))
+    WHERE email IS NOT NULL;
 
--- CREATE INDEX idx_email_change_new_email
--- ON email_change_requests (new_email);
+CREATE UNIQUE INDEX uq_users_username_lower
+    ON users (LOWER(username));
 
--- CREATE INDEX idx_email_change_expires
--- ON email_change_requests (expires_at);
+CREATE INDEX idx_email_verification_tokens_user_unused
+    ON email_verification_tokens (user_id)
+    WHERE used_at IS NULL;
 
--- CREATE INDEX idx_user_sessions_user_active
--- ON user_sessions (user_id, revoked_at);
+CREATE INDEX idx_password_reset_tokens_user_unused
+    ON password_reset_tokens (user_id)
+    WHERE used_at IS NULL;
 
--- CREATE UNIQUE INDEX uq_users_email_lower
--- ON users (LOWER(email))
--- WHERE email IS NOT NULL;
+CREATE INDEX idx_user_sessions_user_active
+    ON user_sessions (user_id, last_seen_at DESC)
+    WHERE revoked_at IS NULL;
 
--- CREATE UNIQUE INDEX uq_users_username_lower
--- ON users (LOWER(username));
+CREATE INDEX idx_user_scores_user_played
+    ON user_scores (user_id, played_at DESC);
+
+CREATE INDEX idx_user_scores_user_best
+    ON user_scores (user_id, score_result DESC);

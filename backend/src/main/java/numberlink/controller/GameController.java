@@ -44,8 +44,8 @@ public class GameController {
 
         session.setAttribute("width", width);
         session.setAttribute("height", height);
-
         session.setAttribute("map_solved", map_solved);
+        session.setAttribute("hints_used", 0);
 
         return ResponseEntity.ok(Arrays.deepToString(map_unsolved));
     }
