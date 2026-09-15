@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @Table(name = "users")
 @Entity(name = "User")
 public class UserEntity {
@@ -29,7 +28,7 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(name = "avatar_url", length = 512)
+    @Column(name = "avatar_url", length = 2048)
     private String avatarUrl;
 
     @Column(name = "email_verified", nullable = false)
