@@ -96,7 +96,8 @@ public class SecurityConfig {
                                 "/api/create-map",
                                 "/api/width",
                                 "/api/height",
-                                "/api/generate-name"
+                                "/api/generate-name",
+                                "/api/search/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/api/map-check",

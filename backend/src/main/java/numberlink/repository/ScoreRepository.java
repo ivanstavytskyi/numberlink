@@ -1,6 +1,7 @@
 package numberlink.repository;
 
 import numberlink.entity.ScoreEntity;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,7 @@ public interface ScoreRepository extends JpaRepository<ScoreEntity, Long> {
     Optional<ScoreEntity> findFirstByUser_IdOrderByScoreResultDesc(UUID userId);
 
     List<ScoreEntity> findAllByUser_IdOrderByPlayedAtDesc(UUID userId);
+
+    @EntityGraph(attributePaths = "user")
+    Optional<ScoreEntity> findByGameToken(UUID gameToken);
 }
