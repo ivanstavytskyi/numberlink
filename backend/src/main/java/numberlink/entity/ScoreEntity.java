@@ -6,11 +6,11 @@ import lombok.Setter;
 import lombok.ToString;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
-@Table(name="score")
+@Table(name="user_scores")
 @Entity(name="Score")
 public class ScoreEntity implements Serializable {
     @Id
@@ -21,8 +21,14 @@ public class ScoreEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
+    @Column(name = "game_token", nullable = false, unique = true)
+    private UUID gameToken;
+
     @Column(name = "score_result", nullable = false)
     private int scoreResult;
+
+    @Column(name = "hints", nullable = false)
+    private int hints;
 
     @Column(name = "elapsed_seconds", nullable = false)
     private int elapsedSeconds;
