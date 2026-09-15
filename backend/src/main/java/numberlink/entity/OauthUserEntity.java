@@ -9,7 +9,6 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@ToString
 @Table(name="oauth_accounts")
 @Entity(name="OauthUser")
 public class OauthUserEntity {

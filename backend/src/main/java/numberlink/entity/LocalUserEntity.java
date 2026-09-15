@@ -7,7 +7,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Table(name="local_accounts")
 @Entity(name="LocalUser")
 public class LocalUserEntity {
