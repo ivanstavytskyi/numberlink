@@ -1,7 +1,6 @@
 package numberlink.repository;
 
 import numberlink.entity.MailTokenEntity;
-import numberlink.entity.enums.MailTokenAction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,20 +14,18 @@ public interface MailTokenRepository extends JpaRepository<MailTokenEntity, Long
     @Query("""
             select m from MailToken m
             join fetch m.user
-            where m.tokenHash = :tokenHash and m.action = :action
+            where m.tokenHash = :tokenHash
             """)
-    Optional<MailTokenEntity> findByTokenHashAndActionWithUser(
-            @Param("tokenHash") String tokenHash,
-            @Param("action") MailTokenAction action
+    Optional<MailTokenEntity> findByTokenHashWithUser(
+            @Param("tokenHash") String tokenHash
     );
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
             delete from MailToken m
-            where m.user.id = :userId and m.action = :action and m.usedAt is null
+            where m.user.id = :userId and m.usedAt is null
             """)
-    int deleteUnusedByUserIdAndAction(
-            @Param("userId") UUID userId,
-            @Param("action") MailTokenAction action
+    int deleteUnusedByUserId(
+            @Param("userId") UUID userId
     );
 }
