@@ -4,8 +4,8 @@ import numberlink.dto.user.login.request.LoginRequestDto;
 import numberlink.dto.user.register.request.RegisterRequestDto;
 import numberlink.entity.LocalUserEntity;
 import numberlink.entity.MailTokenEntity;
+import numberlink.entity.PasswordTokenEntity;
 import numberlink.entity.UserEntity;
-import numberlink.entity.enums.MailTokenAction;
 import numberlink.exceptions.AccountHasNoEmailException;
 import numberlink.exceptions.AccountNotFoundException;
 import numberlink.exceptions.EmailAlreadyVerifiedException;
@@ -23,6 +23,7 @@ import numberlink.exceptions.UsernameOrEmailTakenException;
 import numberlink.exceptions.UsernameSuggestFailedException;
 import numberlink.repository.LocalUserRepository;
 import numberlink.repository.MailTokenRepository;
+import numberlink.repository.PasswordTokenRepository;
 import numberlink.repository.UserRepository;
 import numberlink.service.user.UsernameGenerator;
 import numberlink.service.mail.EmailService;
@@ -63,6 +64,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final LocalUserRepository localUserRepository;
     private final MailTokenRepository mailTokenRepository;
+    private final PasswordTokenRepository passwordTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UsernameGenerator usernameGenerator;
     private final EmailService emailService;
@@ -75,6 +77,7 @@ public class AuthService {
     public AuthService(UserRepository userRepository,
                        LocalUserRepository localUserRepository,
                        MailTokenRepository mailTokenRepository,
+                       PasswordTokenRepository passwordTokenRepository,
                        PasswordEncoder passwordEncoder,
                        UsernameGenerator usernameGenerator,
                        EmailService emailService,
@@ -86,6 +89,7 @@ public class AuthService {
         this.userRepository = userRepository;
         this.localUserRepository = localUserRepository;
         this.mailTokenRepository = mailTokenRepository;
+        this.passwordTokenRepository = passwordTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.usernameGenerator = usernameGenerator;
         this.emailService = emailService;
@@ -140,7 +144,7 @@ public class AuthService {
 
         String tokenHash = VerificationTokenFactory.hash(rawToken.trim());
         MailTokenEntity mail = mailTokenRepository
-                .findByTokenHashAndActionWithUser(tokenHash, MailTokenAction.EMAIL_VERIFY)
+                .findByTokenHashWithUser(tokenHash)
                 .orElseThrow(InvalidVerificationTokenException::new);
 
         if (mail.getUsedAt() != null) {
@@ -171,14 +175,13 @@ public class AuthService {
             throw new AccountHasNoEmailException();
         }
 
-        mailTokenRepository.deleteUnusedByUserIdAndAction(user.getId(), MailTokenAction.EMAIL_VERIFY);
+        mailTokenRepository.deleteUnusedByUserId(user.getId());
 
         VerificationTokenFactory.IssuedToken issued = VerificationTokenFactory.issue(user.getId());
         Instant now = Instant.now();
 
         MailTokenEntity mail = new MailTokenEntity();
         mail.setUser(user);
-        mail.setAction(MailTokenAction.EMAIL_VERIFY);
         mail.setTokenHash(issued.tokenHash());
         mail.setExpiresAt(now.plus(verifyTokenTtl));
         mail.setCreatedAt(now);
@@ -227,23 +230,23 @@ public class AuthService {
         }
 
         String tokenHash = VerificationTokenFactory.hash(rawToken.trim());
-        MailTokenEntity mail = mailTokenRepository
-                .findByTokenHashAndActionWithUser(tokenHash, MailTokenAction.PASSWORD_RESET)
+        PasswordTokenEntity token = passwordTokenRepository
+                .findByTokenHashWithUser(tokenHash)
                 .orElseThrow(InvalidPasswordResetTokenException::new);
 
-        if (mail.getUsedAt() != null || mail.getExpiresAt().isBefore(Instant.now())) {
+        if (token.getUsedAt() != null || token.getExpiresAt().isBefore(Instant.now())) {
             throw new InvalidPasswordResetTokenException();
         }
 
-        UserEntity user = mail.getUser();
+        UserEntity user = token.getUser();
         if (localUserRepository.findByUserId(user.getId()).isEmpty()) {
             throw new InvalidPasswordResetTokenException();
         }
 
         Instant now = Instant.now();
-        mail.setUsedAt(now);
-        mailTokenRepository.save(mail);
-        mailTokenRepository.deleteUnusedByUserIdAndAction(user.getId(), MailTokenAction.PASSWORD_RESET);
+        token.setUsedAt(now);
+        passwordTokenRepository.save(token);
+        passwordTokenRepository.deleteUnusedByUserId(user.getId());
         localUserRepository.updateEncodedPassword(user.getId(), passwordEncoder.encode(newPassword));
     }
 
@@ -253,18 +256,17 @@ public class AuthService {
             throw new AccountHasNoEmailException();
         }
 
-        mailTokenRepository.deleteUnusedByUserIdAndAction(user.getId(), MailTokenAction.PASSWORD_RESET);
+        passwordTokenRepository.deleteUnusedByUserId(user.getId());
 
         VerificationTokenFactory.IssuedToken issued = VerificationTokenFactory.issue(user.getId());
         Instant now = Instant.now();
 
-        MailTokenEntity mail = new MailTokenEntity();
-        mail.setUser(user);
-        mail.setAction(MailTokenAction.PASSWORD_RESET);
-        mail.setTokenHash(issued.tokenHash());
-        mail.setExpiresAt(now.plus(resetTokenTtl));
-        mail.setCreatedAt(now);
-        mailTokenRepository.save(mail);
+        PasswordTokenEntity token = new PasswordTokenEntity();
+        token.setUser(user);
+        token.setTokenHash(issued.tokenHash());
+        token.setExpiresAt(now.plus(resetTokenTtl));
+        token.setCreatedAt(now);
+        passwordTokenRepository.save(token);
 
         String subject = "Reset your NumberLink password";
         String resetUrl = verificationEmailComposer.buildPasswordResetLink(issued.rawToken());
@@ -418,6 +420,26 @@ public class AuthService {
 
         return userRepository.findById(userId)
                 .orElseThrow(NotAuthenticatedException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<UserEntity> findCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication.getPrincipal() == null
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return Optional.empty();
+        }
+
+        UUID userId;
+        try {
+            userId = UUID.fromString(authentication.getName());
+        } catch (IllegalArgumentException ex) {
+            return Optional.empty();
+        }
+
+        return userRepository.findById(userId);
     }
 
     public void changePassword(String currentPassword, String newPassword, HttpServletRequest request) {
