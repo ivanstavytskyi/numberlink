@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@Table(name = "email_change_requests")
+@Table(name = "email_change_tokens")
 @Entity(name = "EmailChangeRequest")
 public class EmailChangeRequestEntity {
 

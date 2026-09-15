@@ -9,9 +9,9 @@ import java.time.Instant;
 
 @Setter
 @Getter
-@Table(name = "email_verification_tokens")
-@Entity(name = "MailToken")
-public class MailTokenEntity {
+@Table(name = "password_reset_tokens")
+@Entity(name = "PasswordToken")
+public class PasswordTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

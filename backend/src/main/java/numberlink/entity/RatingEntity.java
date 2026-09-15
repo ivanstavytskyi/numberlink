@@ -9,8 +9,7 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@ToString
-@Table(name="rating")
+@Table(name="user_ratings")
 @Entity(name="Rating")
 @NamedQuery (
     name="RatingEntity.getRatingPercentage",
