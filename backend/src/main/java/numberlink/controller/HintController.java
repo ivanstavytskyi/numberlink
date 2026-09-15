@@ -31,6 +31,7 @@ public class HintController {
         Object widthObj = session.getAttribute("width");
         Object heightObj = session.getAttribute("height");
         Object mapSolvedObj = session.getAttribute("map_solved");
+        Object hintsUsedObj = session.getAttribute("hints_used");
 
         if (widthObj == null || heightObj == null || mapSolvedObj == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "No active map"));
@@ -44,6 +45,8 @@ public class HintController {
             return ResponseEntity.badRequest().body("Error. Transfered map size, not answer original size.");
         }
 
+        int hintsUsed = (hintsUsedObj != null) ? (int) hintsUsedObj : 0;
+
         boolean helpToClear = false;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -55,6 +58,7 @@ public class HintController {
         }
 
         if (helpToClear) {
+            session.setAttribute("hints_used", hintsUsed + 1);
             return ResponseEntity.ok(Map.of("status", "success", "map", map));
         }
 
@@ -75,6 +79,7 @@ public class HintController {
                                         map[ny][nx] == -1 &&
                                         mapSolved[ny][nx] == map[i][j]) {
                             map[ny][nx] = map[i][j];
+                            session.setAttribute("hints_used", hintsUsed + 1);
                             return ResponseEntity.ok(Map.of("status", "success", "map", map));
                         }
                     }
@@ -87,6 +92,8 @@ public class HintController {
                                         map[ny][nx] == -1 &&
                                         mapSolved[ny][nx] == map[i][j]) {
                             map[ny][nx] = map[i][j];
+
+                            session.setAttribute("hints_used", hintsUsed+1);
                             return ResponseEntity.ok(Map.of("status", "success", "map", map));
                         }
                     }
