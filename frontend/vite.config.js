@@ -15,6 +15,33 @@ function allowedHostsFromEnv() {
 
 const allowedHosts = allowedHostsFromEnv()
 
+const SEARCH_PATH = /^\/search(?:\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?\/?$/i
+
+function rewriteSearchPath(req) {
+  const path = req.url?.split('?')[0] ?? ''
+  if (!SEARCH_PATH.test(path)) return
+  const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : ''
+  req.url = `/${query}`
+}
+
+function searchPathFallback() {
+  return {
+    name: 'search-path-fallback',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        rewriteSearchPath(req)
+        next()
+      })
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        rewriteSearchPath(req)
+        next()
+      })
+    },
+  }
+}
+
 const backendProxy = {
   '/api': { target: backend, changeOrigin: true },
   '/oauth2': { target: backend, changeOrigin: true },
@@ -23,6 +50,7 @@ const backendProxy = {
 }
 
 export default defineConfig({
+  plugins: [searchPathFallback()],
   root: 'src',
   build: {
     outDir: resolve(rootDir, 'dist'),
@@ -34,6 +62,7 @@ export default defineConfig({
         reviews: resolve(rootDir, 'src/reviews/index.html'),
         faqs: resolve(rootDir, 'src/faqs/index.html'),
         verify: resolve(rootDir, 'src/verify/index.html'),
+        history: resolve(rootDir, 'src/history/index.html')
       },
     },
   },
