@@ -271,7 +271,7 @@ function resolveMediaUrl(url) {
 function renderAvatarHtml(draft) {
   const src = resolveMediaUrl(draft.avatarUrl);
   if (src) {
-    return `<img src="${escapeHtml(src)}" alt="" />`;
+    return `<img src="${escapeHtml(src)}" alt="" referrerpolicy="no-referrer" />`;
   }
   return escapeHtml(userInitials(draft.username));
 }
@@ -1784,6 +1784,18 @@ async function closeAccountSettings() {
   }
 }
 
+function historyIcon() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`;
+}
+
+function getHistoryMenuItemHtml() {
+  return `
+    <a href="/history/" class="auth-menu__settings" role="menuitem" data-auth-history>
+      <span class="auth-menu__settings-icon" aria-hidden="true">${historyIcon()}</span>
+      <span>History</span>
+    </a>`;
+}
+
 function getSettingsGearButtonHtml() {
   return `
     <button type="button" class="auth-menu__settings" role="menuitem" data-auth-settings>
@@ -2963,7 +2975,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 
   const avatarSrc = resolveMediaUrl(profile.avatarUrl);
   const avatarHtml = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : null;
 
   authRoot.querySelectorAll('.auth-user__avatar, .auth-menu__avatar').forEach((el) => {
@@ -2983,7 +2995,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 function buildUserMenuHtml(name, email, initials, avatarUrl) {
   const avatarSrc = resolveMediaUrl(avatarUrl);
   const avatarInner = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : initials;
   return `
     <div class="auth-user-wrap">
@@ -3011,6 +3023,7 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
             ${email ? `<p class="auth-menu__email">${email}</p>` : ''}
           </div>
         </div>
+        ${getHistoryMenuItemHtml()}
         ${getSettingsGearButtonHtml()}
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
@@ -4592,7 +4605,7 @@ async function saveScore(time) {
             });
 
         if (response.status === 401 || response.status === 403) {
-            window.NumberLinkAuth?.open('login');
+            window.NumberLinkAuth?.open('signup');
             throw new Error('Log in to save your score.');
         }
         if (!response.ok) throw new Error("API error");
@@ -4643,5 +4656,243 @@ function prepareRound() {
 
         e.preventDefault();
         startGame();
+    });
+})();
+
+function searchPathToken() {
+    const path = window.location.pathname.replace(/\/+$/, '') || '/';
+    const match = path.match(/^\/search(?:\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}))?$/i);
+    if (!match) return null;
+    return match[1] || '';
+}
+
+function isSearchPath() {
+    return searchPathToken() !== null;
+}
+
+function formatSharedSeconds(total) {
+    if (total < 60) return `${total}s`;
+    return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function formatSharedHints(hints) {
+    if (hints === 0) return 'no hints';
+    if (hints === 1) return '1 hint';
+    return `${hints} hints`;
+}
+
+function openSharedResultModal({ title, score, meta, hint, empty, hideActions }) {
+    if (document.getElementById('shared_overlay')) return;
+
+    document.body.insertAdjacentHTML('beforeend', `
+        <div class="shared_overlay" id="shared_overlay" hidden>
+            <div class="shared_card${empty ? ' shared_card--empty' : ''}${hideActions ? ' shared_card--authed' : ''}" role="dialog" aria-modal="true" aria-labelledby="shared_kicker">
+                <button type="button" class="shared_close" id="shared_close" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="shared_kicker" id="shared_kicker">Shared result</div>
+
+                <div class="shared_result">
+                    <div class="shared_trophy" aria-hidden="true">
+                        <span class="confetti c1"></span>
+                        <span class="confetti c2"></span>
+                        <span class="confetti c3"></span>
+                        <span class="confetti c4"></span>
+                        <span class="confetti c5"></span>
+                        <span class="confetti c6"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                    </div>
+                    <div class="shared_player" id="shared_player"></div>
+                    <div class="shared_score">
+                        <span id="shared_score_value"></span>
+                        <span class="shared_score_unit">pts</span>
+                    </div>
+                    <div class="shared_meta" id="shared_meta"></div>
+                </div>
+
+                <div class="shared_cta_hint" id="shared_cta_hint"></div>
+
+                <div class="shared_actions">
+                    <button type="button" class="shared_btn shared_btn--solid" id="shared_signup">Sign up to play</button>
+                    <button type="button" class="shared_btn shared_btn--ghost" id="shared_login">Log in</button>
+                </div>
+            </div>
+        </div>
+    `);
+
+    document.getElementById('shared_player').textContent = title;
+    document.getElementById('shared_score_value').textContent = score == null ? '' : String(score);
+    document.getElementById('shared_meta').textContent = meta || '';
+    document.getElementById('shared_cta_hint').textContent = hint;
+
+    const overlay = document.getElementById('shared_overlay');
+
+    function closeSharedModal() {
+        if (overlay.hidden) return;
+        overlay.classList.remove('show');
+        setTimeout(() => {
+            overlay.hidden = true;
+        }, 180);
+        const url = new URL(window.location.href);
+        ['shared', 'access', 'player', 'size', 'seconds', 'hints', 'map_track_id'].forEach((k) => url.searchParams.delete(k));
+        const nextPath = isSearchPath() ? '/' : url.pathname;
+        window.history.replaceState({}, '', nextPath + url.search + url.hash);
+    }
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeSharedModal();
+    });
+    document.getElementById('shared_close').addEventListener('click', closeSharedModal);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !overlay.hidden) closeSharedModal();
+    });
+
+    document.getElementById('shared_signup').addEventListener('click', () => {
+        closeSharedModal();
+        openAuth('signup');
+    });
+    document.getElementById('shared_login').addEventListener('click', () => {
+        closeSharedModal();
+        openAuth('login');
+    });
+
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add('show'));
+}
+
+function syncSharedAuthActions() {
+    const card = document.querySelector('#shared_overlay .shared_card');
+    if (!card || card.classList.contains('shared_card--empty')) return;
+    card.classList.toggle('shared_card--authed', document.body.classList.contains('is-authenticated'));
+}
+
+function openSharedNotFoundModal(message, hint) {
+    openSharedResultModal({
+        empty: true,
+        title: message || 'Results not found',
+        score: null,
+        meta: '',
+        hint: hint || 'This shared result is not available.\nCheck the link is correct and has not expired.',
+    });
+}
+
+function openSharedFoundModal(result) {
+    const width = Number.parseInt(result.fieldWidth ?? '', 10);
+    const height = Number.parseInt(result.fieldHeight ?? result.fieldWidth ?? '', 10);
+    const seconds = Number.parseInt(result.elapsedSeconds ?? '', 10);
+    const rawHints = Number.parseInt(result.hints ?? '0', 10);
+    const points = Number.parseInt(result.points ?? '', 10);
+    const player = String(result.player || 'A NumberLink player').slice(0, 32);
+
+    if (!Number.isInteger(width) || width < 5 || width > 15) {
+        openSharedNotFoundModal('Results not found');
+        return;
+    }
+    if (!Number.isInteger(height) || height < 5 || height > 15) {
+        openSharedNotFoundModal('Results not found');
+        return;
+    }
+    if (!Number.isInteger(seconds) || seconds < 1 || seconds > 86400) {
+        openSharedNotFoundModal('Results not found');
+        return;
+    }
+    if (!Number.isInteger(points) || points < 0) {
+        openSharedNotFoundModal('Results not found');
+        return;
+    }
+    const hints = Number.isInteger(rawHints) && rawHints >= 0 && rawHints <= 99 ? rawHints : 0;
+
+    openSharedResultModal({
+        empty: false,
+        hideActions: document.body.classList.contains('is-authenticated'),
+        title: `${player} solved a ${width}×${height} puzzle`,
+        score: points,
+        meta: `${formatSharedSeconds(seconds)} · ${formatSharedHints(hints)}`,
+        hint: 'Think you can beat it? Join in and play.',
+    });
+    syncSharedAuthActions();
+}
+
+async function loadSharedSearchResult(token) {
+    if (!token) {
+        openSharedNotFoundModal('Results not found');
+        return;
+    }
+    const path = `/search/${encodeURIComponent(token)}`;
+    try {
+        const response = await fetch(`${backendApiUrl()}${path}`, { credentials: 'include' });
+        let body = null;
+        try {
+            body = await response.json();
+        } catch {
+            body = null;
+        }
+        if (response.status === 403) {
+            openSharedNotFoundModal(
+                typeof body?.message === 'string' ? body.message : 'This result is private',
+                'Log in with the account that owns this link.\nCheck that the link was entered correctly.',
+            );
+            return;
+        }
+        if (!response.ok) {
+            openSharedNotFoundModal(typeof body?.message === 'string' ? body.message : 'Results not found');
+            return;
+        }
+        openSharedFoundModal(body || {});
+        return;
+    } catch {
+        openSharedNotFoundModal('Results not found');
+    }
+}
+
+(function initSharedResultModal() {
+    document.addEventListener('numberlink:auth', syncSharedAuthActions);
+
+    const token = searchPathToken();
+    if (token !== null) {
+        loadSharedSearchResult(token);
+        return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('shared') !== '1') return;
+    if (params.get('access') === 'private') return;
+
+    const size = Number.parseInt(params.get('size') ?? '', 10);
+    const seconds = Number.parseInt(params.get('seconds') ?? '', 10);
+    const rawHints = Number.parseInt(params.get('hints') ?? '0', 10);
+    const player = (params.get('player') || 'A NumberLink player').slice(0, 32);
+
+    if (!Number.isInteger(size) || size < 5 || size > 15) return;
+    if (!Number.isInteger(seconds) || seconds < 1 || seconds > 86400) return;
+    const hints = Number.isInteger(rawHints) && rawHints >= 0 && rawHints <= 99 ? rawHints : 0;
+
+    const score = Math.round(10000 / seconds);
+    const time = seconds < 60
+        ? `${seconds}s`
+        : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+    const hintsText = hints === 0 ? 'no hints' : hints === 1 ? '1 hint' : `${hints} hints`;
+
+    openSharedResultModal({
+        empty: false,
+        title: `${player} solved a ${size}×${size} puzzle`,
+        score,
+        meta: `${time} · ${hintsText}`,
+        hint: 'Think you can beat it? Join in and play.',
     });
 })();
