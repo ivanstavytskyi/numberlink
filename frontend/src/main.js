@@ -173,21 +173,9 @@ async function revokeOtherUserSessions() {
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.message || 'Could not sign out other devices.');
+    throw new Error(data.message || 'Could not terminate other sessions.');
   }
   return mapUserSessions(data);
-}
-
-async function revokeAllUserSessions() {
-  const response = await fetch(`${backendApiUrl()}/me/sessions/revoke-all`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { Accept: 'application/json' },
-  });
-  if (!response.ok && response.status !== 204) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.message || 'Could not sign out all devices.');
-  }
 }
 
 function settingsState() {
@@ -448,7 +436,7 @@ function panelSecurity(draft, sessions) {
           </p>
           <p class="nl-settings__session-detail">${escapeHtml(s.place)} · ${escapeHtml(s.lastActive)}</p>
         </div>
-        <button type="button" class="nl-settings__session-action" data-settings-revoke="${escapeHtml(s.id)}"${s.current ? ' data-settings-revoke-current' : ''}>Sign out</button>
+        ${s.current ? '' : `<button type="button" class="nl-settings__session-action" data-settings-revoke="${escapeHtml(s.id)}" aria-label="Terminate this session">${closeIcon()}</button>`}
       </div>`
     )
     .join('');
@@ -484,13 +472,12 @@ function panelSecurity(draft, sessions) {
         <h4 class="nl-settings__block-title">Sessions</h4>
         <p class="nl-settings__block-lead">Sign out any device you do not recognize.</p>
         <div data-settings-sessions>${rows || '<p class="nl-settings__hint">No other sessions.</p>'}</div>
-        <div class="nl-settings__actions nl-settings__actions--sessions">
-          <button type="button" class="nl-settings__text-action" data-settings-revoke-others ${sessions.some((s) => !s.current) ? '' : 'hidden'}>
-            Sign out other devices
+        <div class="nl-settings__actions nl-settings__actions--sessions"${sessions.some((s) => !s.current) ? '' : ' hidden'}>
+          <button type="button" class="nl-settings__terminate" data-settings-revoke-others>
+            <span class="nl-settings__terminate-icon" aria-hidden="true"></span>
+            <span>Terminate all other sessions</span>
           </button>
-          <button type="button" class="nl-settings__text-action" data-settings-revoke-all>
-            Sign out all devices
-          </button>
+          <p class="nl-settings__block-lead">Log out all devices except for this one.</p>
         </div>
         ${statusSlot('security:sessions')}
       </div>
@@ -1331,19 +1318,9 @@ function onSessionRevoke(event) {
   if (!btn) return;
 
   const id = btn.getAttribute('data-settings-revoke');
-  const isCurrent = btn.hasAttribute('data-settings-revoke-current');
   btn.disabled = true;
   revokeUserSession(id)
-    .then(async (sessions) => {
-      if (isCurrent) {
-        await closeAccountSettings();
-        const authRoot = document.querySelector('.header_auth');
-        setDocumentAuthState(null);
-        if (authRoot) {
-          await transitionAuthChrome(authRoot, () => renderGuestAuth(authRoot));
-        }
-        return;
-      }
+    .then((sessions) => {
       settingsState().sessions = sessions;
       remountContent();
       showSection('security');
@@ -1364,30 +1341,11 @@ function onRevokeOtherSessions() {
       settingsState().sessions = sessions;
       remountContent();
       showSection('security');
-      setStatus('security:sessions', 'Other devices signed out.');
+      setStatus('security:sessions', 'Other sessions terminated.');
     })
     .catch((err) => {
       if (btn) btn.disabled = false;
-      setStatus('security:sessions', err.message || 'Could not sign out other devices.', true);
-    });
-}
-
-function onRevokeAllSessions() {
-  const overlay = document.getElementById('nl-settings-overlay');
-  const btn = overlay?.querySelector('[data-settings-revoke-all]');
-  if (btn) btn.disabled = true;
-  revokeAllUserSessions()
-    .then(async () => {
-      await closeAccountSettings();
-      const authRoot = document.querySelector('.header_auth');
-      setDocumentAuthState(null);
-      if (authRoot) {
-        await transitionAuthChrome(authRoot, () => renderGuestAuth(authRoot));
-      }
-    })
-    .catch((err) => {
-      if (btn) btn.disabled = false;
-      setStatus('security:sessions', err.message || 'Could not sign out all devices.', true);
+      setStatus('security:sessions', err.message || 'Could not terminate other sessions.', true);
     });
 }
 
@@ -1711,8 +1669,6 @@ function bindOverlay(overlay) {
   overlay.querySelector('[data-settings-sessions]')?.addEventListener('click', onSessionRevoke);
 
   overlay.querySelector('[data-settings-revoke-others]')?.addEventListener('click', onRevokeOtherSessions);
-
-  overlay.querySelector('[data-settings-revoke-all]')?.addEventListener('click', onRevokeAllSessions);
 
   overlay.querySelector('[data-settings-2fa]')?.addEventListener('change', (e) => {
     onTwoFactorToggle(overlay, e);

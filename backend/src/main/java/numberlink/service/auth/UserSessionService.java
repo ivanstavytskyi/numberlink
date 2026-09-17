@@ -132,11 +132,7 @@ public class UserSessionService {
     }
 
     public void revokeOthers(UUID userId, HttpServletRequest request) {
-        UUID keepId = currentSessionId(request).orElse(null);
-        if (keepId == null) {
-            userSessionRepository.revokeAll(userId, Instant.now());
-            return;
-        }
+        UUID keepId = currentSessionId(request).orElseThrow(UserSessionNotFoundException::new);
         userSessionRepository.revokeOthers(userId, keepId, Instant.now());
     }
 

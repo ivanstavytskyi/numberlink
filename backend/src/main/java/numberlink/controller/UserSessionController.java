@@ -4,12 +4,10 @@ import numberlink.entity.UserEntity;
 import numberlink.service.auth.AuthService;
 import numberlink.service.auth.UserSessionService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,14 +44,6 @@ public class UserSessionController {
         body.put("ok", true);
         body.put("sessions", userSessionService.listActive(user.getId(), request));
         return ResponseEntity.ok(body);
-    }
-
-    @PostMapping("/revoke-all")
-    public ResponseEntity<Void> revokeAll(HttpServletRequest request, HttpServletResponse response) {
-        UserEntity user = authService.requireCurrentUser();
-        userSessionService.revokeAll(user.getId());
-        authService.logout(request, response);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
