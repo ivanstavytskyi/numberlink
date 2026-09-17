@@ -1,14 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.css';
-import * as bootstrap from 'bootstrap';
-
-const cellClick = '/assets/sounds/cell_click.mp3';
-const cellConnect = '/assets/sounds/cell_connect.mp3';
-const cellDisconnect = '/assets/sounds/cell_disconnect.mp3';
-
-import '@material/mwc-select';
-import '@material/mwc-list/mwc-list-item.js';
-
 function backendOrigin() {
   return '';
 }
@@ -19,15 +8,19 @@ function backendApiUrl() {
 function closeIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
 }
+
 function gearIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.115 2.693l.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.115l-.094.319c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.693-1.115z"/></svg>`;
 }
+
 function cameraIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5h2l1-1.5h5l1 1.5h2A1.5 1.5 0 0 1 14 7v5.5A1.5 1.5 0 0 1 12.5 14h-9A1.5 1.5 0 0 1 2 12.5V7a1.5 1.5 0 0 1 1.5-1.5z"/><circle cx="8" cy="9.25" r="2.25"/></svg>`;
 }
+
 function googleIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.227 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 16.108 18.961 14 24 14c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.205 0-9.62-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>`;
 }
+
 function githubIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>`;
 }
@@ -248,8 +241,8 @@ function buildDraftFromUser(user) {
     githubAccount: oauthAccountFromUser(user, 'GITHUB'),
     twoFactorEnabled: Boolean(user?.twoFactorEnabled),
     soundOn: sound !== 'muted',
-    defaultWidth: widthRaw >= 7 && widthRaw <= 11 ? widthRaw : defaultFieldSize().width,
-    defaultHeight: heightRaw >= 7 && heightRaw <= 11 ? heightRaw : defaultFieldSize().height,
+    defaultWidth: widthRaw >= 7 && widthRaw <= 11 ? widthRaw : 7,
+    defaultHeight: heightRaw >= 7 && heightRaw <= 11 ? heightRaw : 7,
   };
 }
 
@@ -706,7 +699,7 @@ async function onAvatarFileChange(overlay, event) {
   if (!allowed.includes(file.type) || file.size > AVATAR_MAX_BYTES) {
     setStatus('profile:avatar', 'Use a PNG, JPG, or WebP under 7 MB.', true);
     input.value = '';
-        return;
+    return;
   }
 
   setStatus('profile:avatar', 'Uploading photo…');
@@ -1681,12 +1674,10 @@ function bindOverlay(overlay) {
 
   overlay.addEventListener('submit', (e) => {
     if (e.target.closest('[data-settings-form="profile"]')) {
-      e.preventDefault();
       onProfileSubmit(overlay, e);
       return;
     }
     if (e.target.closest('[data-settings-form="password"]')) {
-      e.preventDefault();
       onPasswordSubmit(e);
     }
   });
@@ -1804,11 +1795,13 @@ function getSettingsGearButtonHtml() {
     </button>`;
 }
 
+/** Escape closes settings when open (auth-ui wires Escape for menu too). */
 function isSettingsOpen() {
   const overlay = document.getElementById('nl-settings-overlay');
   return Boolean(overlay?.classList.contains('is-open'));
 }
 
+/** Spring Security OAuth2 authorization entrypoints */
 function oauthProviders() {
   return {
   google: 'google',
@@ -1827,6 +1820,8 @@ function oauthLinkKey() {
 }
 
 
+
+
 function chevronIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>`;
 }
@@ -1841,10 +1836,6 @@ function suggestIcon() {
 
 function mailIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 8.5 7.6 4.9a1.6 1.6 0 0 0 1.8 0l7.6-4.9"/></svg>`;
-}
-
-function checkIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
 }
 
 function buildVerifyEmailDialog() {
@@ -1866,61 +1857,6 @@ function buildVerifyEmailDialog() {
         <p class="auth-status" data-auth-status aria-live="polite"></p>
         <p class="auth-switch">Already confirmed?&ensp;<button type="button" data-auth-switch="login">Log in</button></p>
         <p class="auth-switch">Wrong email?&ensp;<button type="button" data-auth-switch="signup">Sign up again</button></p>
-      </div>
-    </div>`;
-}
-
-function buildEmailConfirmedDialog() {
-  return `
-    <div class="auth-overlay" id="auth-overlay-confirmed" data-auth-overlay="confirmed" hidden>
-      <div
-        class="auth-dialog auth-dialog--verify auth-dialog--status"
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="auth-title-confirmed"
-        aria-describedby="auth-desc-confirmed"
-        tabindex="-1"
-      >
-        <button type="button" class="auth-dialog__close" data-auth-close aria-label="Close">${closeIcon()}</button>
-        <div class="auth-verify__icon auth-verify__icon--ok" aria-hidden="true">${checkIcon()}</div>
-        <h2 class="auth-dialog__title" id="auth-title-confirmed">Email confirmed</h2>
-        <div id="auth-desc-confirmed">
-          <div class="auth-status-dialog__identity" data-confirmed-identity hidden>
-            <p class="auth-status-dialog__caption">Signed in as</p>
-            <p class="auth-status-dialog__badge" data-confirmed-as></p>
-          </div>
-          <p class="auth-dialog__lead auth-verify__lead">Your account is ready. Play and save scores on this browser.</p>
-        </div>
-        <div class="auth-status-dialog__actions">
-          <button type="button" class="auth-submit" data-auth-close data-auth-primary>Continue</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function buildEmailConfirmFailedDialog() {
-  return `
-    <div class="auth-overlay" id="auth-overlay-confirm-failed" data-auth-overlay="confirm-failed" hidden>
-      <div
-        class="auth-dialog auth-dialog--verify auth-dialog--status"
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="auth-title-confirm-failed"
-        aria-describedby="auth-desc-confirm-failed"
-        tabindex="-1"
-      >
-        <button type="button" class="auth-dialog__close" data-auth-close aria-label="Close">${closeIcon()}</button>
-        <div class="auth-verify__icon auth-verify__icon--err" aria-hidden="true">${mailIcon()}</div>
-        <h2 class="auth-dialog__title" id="auth-title-confirm-failed">Couldn’t confirm email</h2>
-        <p class="auth-dialog__lead auth-verify__lead" id="auth-desc-confirm-failed" data-confirm-failed-msg>
-          This confirmation link is invalid or has expired.
-        </p>
-        <p class="auth-verify__note">
-          It may have already been used, or too much time has passed. Log in to request a new confirmation email.
-        </p>
-        <div class="auth-status-dialog__actions">
-          <button type="button" class="auth-submit" data-auth-switch="login" data-auth-primary>Log in</button>
-        </div>
       </div>
     </div>`;
 }
@@ -2259,6 +2195,15 @@ function resumeVerifyResendCooldown(overlay) {
     overlay._verifyResendTimer = setInterval(() => tickVerifyResendCooldown(overlay), 250);
 }
 
+const AUTH_SUBMIT_IDLE = {
+    login: 'Log in',
+    signup: 'Create account',
+    forgot: 'Send reset link',
+    reset: 'Update password',
+    confirmed: 'Continue',
+    'confirm-failed': 'Log in',
+};
+
 function resetAuthOverlays() {
     document.querySelectorAll('[data-auth-overlay]').forEach((overlay) => {
         overlay.classList.remove('is-open', 'is-closing');
@@ -2327,74 +2272,6 @@ function openVerifyEmail(email, { sentJustNow = false } = {}) {
     });
 }
 
-const EMAIL_CONFIRMED_FLAG = 'nl_email_just_confirmed';
-const EMAIL_CONFIRM_ERROR_FLAG = 'nl_email_confirm_error';
-
-function takeEmailConfirmFlags() {
-    let confirmed = null;
-    let error = null;
-    try {
-        confirmed = sessionStorage.getItem(EMAIL_CONFIRMED_FLAG);
-        error = sessionStorage.getItem(EMAIL_CONFIRM_ERROR_FLAG);
-        sessionStorage.removeItem(EMAIL_CONFIRMED_FLAG);
-        sessionStorage.removeItem(EMAIL_CONFIRM_ERROR_FLAG);
-    } catch (_) {}
-    return { confirmed, error };
-}
-
-const AUTH_SUBMIT_IDLE = {
-    login: 'Log in',
-    signup: 'Create account',
-    forgot: 'Send reset link',
-    reset: 'Update password',
-    confirmed: 'Continue',
-    'confirm-failed': 'Log in',
-};
-
-function focusableIn(overlay) {
-    return [...overlay.querySelectorAll(
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    )].filter((el) => el.getClientRects().length > 0);
-}
-
-function openStatusAuthOverlay(overlayId) {
-    resetAuthOverlays();
-    const overlay = document.getElementById(overlayId);
-    if (!overlay) return;
-    overlay.hidden = false;
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    requestAnimationFrame(() => {
-        overlay.querySelector('.auth-dialog')?.focus({ preventScroll: true });
-    });
-}
-
-function openEmailConfirmedModal(username) {
-    const overlay = document.getElementById('auth-overlay-confirmed');
-    if (!overlay) return;
-
-    const identity = overlay.querySelector('[data-confirmed-identity]');
-    const badge = overlay.querySelector('[data-confirmed-as]');
-    const name = String(username || '').trim();
-    const showName = Boolean(name && name !== '1');
-
-    if (badge) badge.textContent = showName ? name : '';
-    if (identity) identity.hidden = !showName;
-
-    openStatusAuthOverlay('auth-overlay-confirmed');
-}
-
-function openEmailConfirmFailedModal(message) {
-    const overlay = document.getElementById('auth-overlay-confirm-failed');
-    if (!overlay) return;
-    const msgEl = overlay.querySelector('[data-confirm-failed-msg]');
-    if (msgEl) {
-        msgEl.textContent = message
-            || 'This confirmation link is invalid or has expired.';
-    }
-    openStatusAuthOverlay('auth-overlay-confirm-failed');
-}
-
 function isUnverifiedEmailError(err) {
     const code = String(err?.code || '').toUpperCase();
     const msg = String(err?.message || '').toLowerCase();
@@ -2407,6 +2284,7 @@ function closeAuth() {
     resetAuthOverlays();
 }
 
+/** Animated close after successful login/signup — rare action, short exit OK */
 async function closeAuthAnimated() {
     const open = document.querySelector('.auth-overlay.is-open');
     if (!open || prefersReducedMotion()) {
@@ -2420,6 +2298,7 @@ async function closeAuthAnimated() {
     resetAuthOverlays();
 }
 
+/** Guest ↔ user header swap after login/logout (not on cold page load) */
 async function transitionAuthChrome(authRoot, renderFn) {
     if (!prefersReducedMotion()) {
         authRoot.classList.remove('is-entering');
@@ -2444,6 +2323,7 @@ function validateForm(form, mode) {
     errorEl.textContent = '';
 
     for (const input of inputs) {
+        // Password may intentionally contain leading/trailing spaces — don't trim it for empty check
         const empty = input.name === 'password' || input.name === 'confirm'
             ? !input.value
             : !input.value.trim();
@@ -2688,30 +2568,6 @@ async function submitPasswordReset(token, password) {
   return response.json().catch(() => ({ ok: true }));
 }
 
-/** Smoke helper: POST /api/mail/send — not wired to verification yet. */
-async function sendMailViaBackend({ to, subject, body }) {
-  const response = await fetch(`${backendApiUrl()}/mail/send`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ to, subject, body }),
-  });
-
-  if (!response.ok) {
-    let message = 'Could not send email.';
-    try {
-      const data = await response.json();
-      message = data.message || data.error || message;
-    } catch (_) {}
-    throw new Error(message);
-  }
-
-  return response.json().catch(() => ({ ok: true }));
-}
-
 function oauthAuthorizationUrl(provider) {
   const registrationId = oauthProviders()[provider];
   if (!registrationId) {
@@ -2845,6 +2701,7 @@ function loginWithOAuth(provider) {
   window.location.assign(oauthAuthorizationUrl(id));
 }
 
+/** Surface OAuth failure query (?login=failed) once, then clean the URL */
 function consumeOAuthReturnParams() {
   const params = new URLSearchParams(window.location.search);
   const loginState = params.get('login');
@@ -2901,6 +2758,29 @@ function setDocumentAuthState(user) {
   document.dispatchEvent(new CustomEvent('numberlink:auth', {
     detail: { user: user || null },
   }));
+}
+
+function burgerIcon() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+</svg>`;
+}
+
+function closeMobileNav() {
+  const container = document.querySelector('.header_container');
+  const drawer = document.querySelector('.mobile-nav-drawer');
+  const scrim = document.querySelector('.mobile-nav-scrim');
+  if (!container?.classList.contains('menu-open')) return;
+
+  container.classList.remove('menu-open');
+  if (drawer) drawer.hidden = true;
+  if (scrim) scrim.hidden = true;
+  const toggle = container.querySelector('.menu_toggle');
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+    toggle.innerHTML = burgerIcon();
+  }
 }
 
 function renderGuestAuth(authRoot) {
@@ -3148,8 +3028,6 @@ async function onResendVerification(overlay) {
 
   try {
     await resendVerificationEmail(email);
-    // Feedback lives on the button (Sent → countdown). No permanent status box —
-    // that pattern reads unfinished next to a recovery control.
     btn.textContent = 'Sent';
     btn.disabled = true;
     btn.classList.remove('is-busy');
@@ -3209,6 +3087,7 @@ async function onAuthFormSubmit(auth, overlay, form) {
     if (mode === 'signup') {
       const email = form.querySelector('[name="email"]')?.value.trim() || '';
       await registerUser();
+      // Until backend stops auto-login on register, clear any session.
       try {
         await logoutCurrentUser();
       } catch (_) {}
@@ -3247,21 +3126,6 @@ async function onAuthFormSubmit(auth, overlay, form) {
 }
 
 function bindAuthOverlay(auth, overlay) {
-  overlay.addEventListener('keydown', (e) => {
-    if (e.key !== 'Tab' || !overlay.classList.contains('is-open')) return;
-    const nodes = focusableIn(overlay);
-    if (nodes.length === 0) return;
-    const first = nodes[0];
-    const last = nodes[nodes.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  });
-
   overlay.querySelectorAll('[data-auth-close]').forEach((btn) => {
     btn.addEventListener('click', closeAuth);
   });
@@ -3352,16 +3216,6 @@ function handleOAuthReturn(auth) {
   }
 
   refreshAuthHeader(auth).then(() => {
-    const emailConfirm = takeEmailConfirmFlags();
-    if (emailConfirm.confirmed) {
-      openEmailConfirmedModal(emailConfirm.confirmed);
-      return;
-    }
-    if (emailConfirm.error) {
-      openEmailConfirmFailedModal(emailConfirm.error);
-      return;
-    }
-
     if (!oauthPending || oauthError) return;
 
     if (!document.body.classList.contains('is-authenticated')) {
@@ -3401,9 +3255,7 @@ function initAuthUi() {
       + buildEmailPasswordDialog()
       + buildEmailCodeDialog()
       + buildEmailResultDialog()
-      + buildTwoFactorLoginDialog()
-      + buildEmailConfirmedDialog()
-      + buildEmailConfirmFailedDialog(),
+      + buildTwoFactorLoginDialog(),
   );
   document.querySelectorAll('[data-auth-overlay]').forEach((overlay) => bindAuthOverlay(auth, overlay));
   document.querySelector('[data-email-password-form]')?.addEventListener('submit', onEmailPasswordSubmit);
@@ -3437,7 +3289,6 @@ window.NumberLinkAuth = {
     openVerify: (email, opts) => openVerifyEmail(email, opts),
     openForgot: (email) => openForgotPassword(email),
     openReset: (token) => openResetPassword(token),
-    sendMail: (payload) => sendMailViaBackend(payload),
     refresh: async () => {
         const el = document.querySelector('.header_auth');
         if (el) await refreshAuthHeader(el);
@@ -3445,1454 +3296,3 @@ window.NumberLinkAuth = {
 };
 
 initAuthUi();
-
-
-function burgerIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg>`;
-}
-
-function mobileCloseIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
-}
-
-function syncMobileHeaderBarHeight(container) {
-  if (!container) return;
-  const header = document.querySelector('header');
-  const top = header ? Math.round(header.getBoundingClientRect().bottom) : container.offsetHeight;
-  document.documentElement.style.setProperty('--mobile-header-bar-h', `${top}px`);
-}
-
-function syncMobileNavPlacement(container, drawer, navLinks) {
-  const github = container.querySelector('.header_github');
-  if (window.matchMedia('(max-width: 576px)').matches) {
-    navLinks.forEach((link) => drawer.appendChild(link));
-  } else {
-    navLinks.forEach((link) => container.insertBefore(link, github));
-  }
-}
-
-function closeMobileNav() {
-  const container = document.querySelector('.header_container');
-  const drawer = document.querySelector('.mobile-nav-drawer');
-  const scrim = document.querySelector('.mobile-nav-scrim');
-  if (!container?.classList.contains('menu-open')) return;
-
-  container.classList.remove('menu-open');
-  if (drawer) drawer.hidden = true;
-  if (scrim) scrim.hidden = true;
-  const toggle = container.querySelector('.menu_toggle');
-  if (toggle) {
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
-    toggle.innerHTML = burgerIcon();
-  }
-}
-
-function initMobileNav() {
-  const header = document.querySelector('header');
-  const container = document.querySelector('.header_container');
-  if (!header || !container || container.querySelector('.menu_toggle')) return;
-
-  const navLinks = [...container.querySelectorAll('a:not(.header_github):not(.numberlink_nav)')];
-  const drawer = document.createElement('div');
-  drawer.className = 'mobile-nav-drawer';
-  drawer.hidden = true;
-  document.body.appendChild(drawer);
-
-  const scrim = document.createElement('div');
-  scrim.className = 'mobile-nav-scrim';
-  scrim.hidden = true;
-  document.body.appendChild(scrim);
-  scrim.addEventListener('click', closeMobileNav);
-
-  const mq = window.matchMedia('(max-width: 576px)');
-  syncMobileNavPlacement(container, drawer, navLinks);
-  mq.addEventListener('change', () => {
-    closeMobileNav();
-    syncMobileNavPlacement(container, drawer, navLinks);
-    syncMobileHeaderBarHeight(container);
-  });
-
-  const btn = document.createElement('button');
-  btn.className = 'menu_toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-label', 'Open menu');
-  btn.setAttribute('aria-expanded', 'false');
-  btn.innerHTML = burgerIcon();
-
-  container.prepend(btn);
-  syncMobileHeaderBarHeight(container);
-  window.addEventListener('resize', () => syncMobileHeaderBarHeight(container));
-
-  btn.addEventListener('click', () => {
-    syncMobileHeaderBarHeight(container);
-    const open = container.classList.toggle('menu-open');
-    drawer.hidden = !open;
-    scrim.hidden = !open;
-    btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    btn.innerHTML = open ? mobileCloseIcon() : burgerIcon();
-    // Avoid sticky :hover / focus flash on auth buttons after the tap.
-    requestAnimationFrame(() => {
-      btn.blur();
-      container.querySelectorAll('.auth-btn').forEach((el) => el.blur());
-    });
-  });
-
-  drawer.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMobileNav);
-  });
-}
-
-initMobileNav();
-
-const FIELD_SIZE_MIN = 7;
-const FIELD_SIZE_MAX = 11;
-const FIELD_DESKTOP_DEFAULT = { width: 9, height: 9 };
-const FIELD_MOBILE_DEFAULT = { width: 7, height: 7 };
-
-function isMobilePlayViewport() {
-    return window.matchMedia('(max-width: 576px)').matches;
-}
-
-function defaultFieldSize() {
-    return isMobilePlayViewport() ? FIELD_MOBILE_DEFAULT : FIELD_DESKTOP_DEFAULT;
-}
-
-function clampFieldDim(value, fallback) {
-    const n = Number(value);
-    if (Number.isInteger(n) && n >= FIELD_SIZE_MIN && n <= FIELD_SIZE_MAX) return n;
-    return fallback;
-}
-
-function storedFieldSize() {
-    const fallback = defaultFieldSize();
-    const storedWidth = localStorage.getItem('field_width');
-    const storedHeight = localStorage.getItem('field_height');
-    return {
-        width: storedWidth ? clampFieldDim(storedWidth, fallback.width) : fallback.width,
-        height: storedHeight ? clampFieldDim(storedHeight, fallback.height) : fallback.height,
-    };
-}
-
-function syncFieldSizeSelects(widthElement, heightElement, size) {
-    if (String(widthElement.value) !== String(size.width)) {
-        widthElement.value = String(size.width);
-    }
-    if (String(heightElement.value) !== String(size.height)) {
-        heightElement.value = String(size.height);
-    }
-}
-
-
-async function createBlankTable() {
-    const table = document.getElementById('table_container');
-    if (table) {
-        const slot = table.closest('.board-slot');
-        (slot || table).remove();
-    }
-
-    const topBlock = document.querySelector('.field_container__parent-block-1');
-    if (!topBlock) { console.log('exit'); return; }
-
-    const tableFrame = `<div class="board-slot"><table id="table_container" class="unactive p-0 mx-auto">
-                            <tbody>
-                            </tbody>
-                        </table></div>`;
-
-    topBlock.insertAdjacentHTML('afterend', tableFrame);
-
-    const tableContent = document.querySelector('#table_container tbody');
-    if (!tableContent) { console.log('exit'); return; }
-
-    const widthElement = document.getElementById("width");
-    const heightElement = document.getElementById("height");
-    if (!widthElement) { console.log('exit'); return; }
-    if (!heightElement) { console.log('exit'); return; }
-
-    await widthElement.updateComplete;
-    await heightElement.updateComplete;
-
-    const size = storedFieldSize();
-    syncFieldSizeSelects(widthElement, heightElement, size);
-    await widthElement.updateComplete;
-    await heightElement.updateComplete;
-
-    const width = size.width;
-    const height = size.height;
-
-    let fullContent = '';
-
-    for (let i = 0; i < height; i++) {
-        fullContent += `<tr>`;
-
-        for (let j = 0; j < width; j++) {
-            let cell = `<td class="cell"><span></span></td>`;
-            fullContent += cell;
-        }
-
-        fullContent += '</tr>';
-    }
-
-    tableContent.innerHTML = fullContent;
-    syncGameBoardScale(width, height);
-    requestAnimationFrame(() => {
-        syncGameBoardScale(width, height);
-        requestAnimationFrame(() => syncGameBoardScale(width, height));
-    });
-}
-
-createBlankTable().then(() => cellNumSelectionListener());
-
-function currentGridSize() {
-    const table = document.getElementById('table_container');
-    const widthEl = document.getElementById('width');
-    const heightEl = document.getElementById('height');
-    const cols = table?.querySelectorAll('tr:first-child .cell').length
-        || Number(widthEl?.value)
-        || 9;
-    const rows = table?.querySelectorAll('tr').length
-        || Number(heightEl?.value)
-        || 9;
-    return { cols, rows };
-}
-
-function resyncGameBoard() {
-    const { cols, rows } = currentGridSize();
-    requestAnimationFrame(() => {
-        syncGameBoardScale(cols, rows);
-        requestAnimationFrame(() => syncGameBoardScale(cols, rows));
-    });
-}
-
-window.addEventListener('resize', resyncGameBoard);
-
-
-function syncGameBoardScale(width, height) {
-    const field = document.querySelector('.field_container');
-    const table = document.getElementById('table_container');
-    if (!field || !table) return;
-
-    const cols = Math.max(1, Number(width) || 1);
-    const rows = Math.max(1, Number(height) || 1);
-    const maxDim = Math.max(cols, rows);
-
-    const header = document.querySelector('header');
-    const playBlock = document.getElementById('btn_container');
-    const topBlock = document.querySelector('.field_container__parent-block-1');
-    const divider = document.querySelector('.field_container__divider');
-    const mainEl = document.querySelector('main');
-    const fieldStyles = getComputedStyle(field);
-    const tableStyles = getComputedStyle(table);
-
-    const outerGap = 22;
-
-    if (mainEl) {
-        mainEl.style.paddingTop = `${outerGap}px`;
-        mainEl.style.paddingBottom = `${outerGap}px`;
-    }
-
-    const tableMarginY =
-        (parseFloat(tableStyles.marginTop) || 0) +
-        (parseFloat(tableStyles.marginBottom) || 0);
-
-    const playStyles = playBlock ? getComputedStyle(playBlock) : null;
-    const playMarginY = playStyles
-        ? (parseFloat(playStyles.marginTop) || 0) + (parseFloat(playStyles.marginBottom) || 0)
-        : 0;
-
-    const borderY =
-        (parseFloat(tableStyles.borderTopWidth) || 0) +
-        (parseFloat(tableStyles.borderBottomWidth) || 0);
-
-    const setupChrome = topBlock?.offsetHeight ?? 0;
-    const dividerChrome = divider && !topBlock?.contains(divider)
-        ? (divider.offsetHeight || 0)
-        : 0;
-
-    const chromeHeight =
-        (header?.offsetHeight ?? 0) +
-        outerGap * 2 +
-        setupChrome +
-        dividerChrome +
-        (playBlock?.offsetHeight ?? 0) +
-        playMarginY +
-        tableMarginY +
-        borderY +
-        parseFloat(fieldStyles.paddingTop) +
-        parseFloat(fieldStyles.paddingBottom) +
-        12;
-
-    const MIN_PLAYABLE_CELL = 32;
-    const MAX_CELL = 72;
-    const canFitShrink = window.innerHeight >= 640;
-
-    const isNarrow = window.matchMedia('(max-width: 576px)').matches;
-    const slot = table.closest('.board-slot');
-
-    const applyCellSize = (cellPx) => {
-        table.style.setProperty('--cell-px', `${cellPx}px`);
-        table.style.width = `${cellPx * cols}px`;
-        table.querySelectorAll('.cell').forEach((cell) => {
-            cell.style.width = `${cellPx}px`;
-            cell.style.height = `${cellPx}px`;
-        });
-    };
-
-    if (isNarrow) {
-        const slotStyles = slot ? getComputedStyle(slot) : null;
-        const slotPadX = slotStyles
-            ? (parseFloat(slotStyles.paddingLeft) || 0) + (parseFloat(slotStyles.paddingRight) || 0)
-            : 0;
-        const slotPadY = slotStyles
-            ? (parseFloat(slotStyles.paddingTop) || 0) + (parseFloat(slotStyles.paddingBottom) || 0)
-            : 0;
-        const slotHeight = slot ? slot.clientHeight - slotPadY : 0;
-        const slotWidth = slot ? slot.clientWidth - slotPadX : 0;
-        const useSlot = canFitShrink && slotHeight >= 48 && slotWidth >= 48;
-
-        const gap = fieldStyles.rowGap && fieldStyles.rowGap !== 'normal'
-            ? (parseFloat(fieldStyles.rowGap) || 0)
-            : 0;
-        const flexGaps = gap * 2;
-
-        const availableWidth = useSlot
-            ? Math.max(48, slotWidth - 8)
-            : Math.max(48, field.clientWidth - 32);
-        const widthCell = Math.min(MAX_CELL, Math.floor(availableWidth / cols));
-
-        if (!canFitShrink) {
-            applyCellSize(Math.max(MIN_PLAYABLE_CELL, widthCell));
-            return;
-        }
-
-        const availableHeight = useSlot
-            ? Math.max(48, slotHeight - borderY)
-            : Math.max(48, window.innerHeight - chromeHeight - flexGaps);
-
-        let cellPx = Math.min(
-            MAX_CELL,
-            Math.floor(availableHeight / rows),
-            widthCell
-        );
-        cellPx = Math.max(MIN_PLAYABLE_CELL, cellPx);
-        applyCellSize(cellPx);
-        return;
-    }
-
-    const availableWidth = Math.max(140, field.clientWidth - 32);
-    const widthCell = Math.min(MAX_CELL, Math.floor(availableWidth / cols));
-
-    if (!canFitShrink) {
-        applyCellSize(Math.max(MIN_PLAYABLE_CELL, widthCell));
-        return;
-    }
-
-    const availableHeight = Math.max(140, window.innerHeight - chromeHeight);
-    let cellPx = Math.min(
-        MAX_CELL,
-        Math.floor(availableHeight / maxDim),
-        widthCell
-    );
-    cellPx = Math.max(MIN_PLAYABLE_CELL, cellPx);
-    applyCellSize(cellPx);
-}
-
-async function cellNumSelectionListener() {
-
-    const widthElement = document.getElementById("width");
-    const heightElement = document.getElementById("height");
-
-    if (!widthElement) { console.log('exit'); return; }
-    if (!heightElement) { console.log('exit'); return; }
-
-    await widthElement.updateComplete;
-    await heightElement.updateComplete;
-
-    const storedWidth = localStorage.getItem("field_width");
-    const storedHeight = localStorage.getItem("field_height");
-
-    if (storedWidth && clampFieldDim(storedWidth, 0) === 0) {
-        localStorage.setItem("field_width", String(defaultFieldSize().width));
-        window.location.reload();
-        console.error("Map size is out of range (localstorage)");
-        return;
-    }
-
-    if (storedHeight && clampFieldDim(storedHeight, 0) === 0) {
-        localStorage.setItem("field_height", String(defaultFieldSize().height));
-        window.location.reload();
-        console.error("Map size is out of range (localstorage)");
-        return;
-    }
-
-    syncFieldSizeSelects(widthElement, heightElement, storedFieldSize());
-    await widthElement.updateComplete;
-    await heightElement.updateComplete;
-    await createBlankTable();
-
-    widthElement.addEventListener('change', async () => {
-        localStorage.setItem("field_width", widthElement.value);
-        await createBlankTable();
-    });
-
-    heightElement.addEventListener('change', async () => {
-        localStorage.setItem("field_height", heightElement.value);
-        await createBlankTable();
-    });
-
-}
-
-function checkDir(OldX, OldY, NewX, NewY) {
-
-    const Direction = Object.freeze({
-        UP: -1,
-        DOWN: 1,
-        LEFT: -1,
-        RIGHT: 1
-    });
-
-    if (((OldX + Direction.LEFT > 0 && OldX + Direction.LEFT === NewX) || (OldX + Direction.RIGHT === NewX)) &&
-        ((OldY + Direction.UP > 0 && OldY + Direction.UP === NewY) || (OldY + Direction.DOWN === NewY))) {
-        return false;
-    }
-
-    return true;
-}
-
-function enableTouchSupport() {
-    const table = document.getElementById('table_container');
-    if (!table || table.dataset.touchEnabled === 'true') return;
-    table.dataset.touchEnabled = 'true';
-
-    const toMouseEvent = (type, touch) => new MouseEvent(type, {
-        bubbles: true,
-        cancelable: true,
-        clientX: touch.clientX,
-        clientY: touch.clientY
-    });
-
-    const targetUnderFinger = (touch) => {
-        const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        return el && table.contains(el) ? el : null;
-    };
-
-    table.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        const target = targetUnderFinger(touch);
-        if (!target) return;
-        e.preventDefault(); // block scroll/zoom while drawing
-        target.dispatchEvent(toMouseEvent('mousedown', touch));
-    }, { passive: false });
-
-    table.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        const target = targetUnderFinger(touch);
-        if (!target) return;
-        e.preventDefault();
-        target.dispatchEvent(toMouseEvent('mousemove', touch));
-    }, { passive: false });
-
-    table.addEventListener('touchend', (e) => {
-        const touch = e.changedTouches[0];
-        const target = targetUnderFinger(touch) || table;
-        target.dispatchEvent(toMouseEvent('mouseup', touch));
-    });
-
-    table.addEventListener('touchcancel', () => {
-        window.dispatchEvent(new MouseEvent('mouseup'));
-    });
-}
-
-function paintDrawnCell(span, color, value) {
-  if (!span.classList.contains('active')) {
-    span.id = 'item-' + crypto.randomUUID();
-    span.classList.add('active');
-  }
-  span.style.setProperty('--cell-color', color);
-  span.setAttribute('value', value);
-  span.innerText = value;
-}
-
-function canExtendDraw(fromX, fromY, toX, toY, span, value) {
-  if (!checkDir(fromX, fromY, toX, toY)) return false;
-  if (!span.classList.contains('active')) return true;
-  if (!span.classList.contains('head-tail')) return true;
-  return span.getAttribute('value') == value;
-}
-
-async function finishRoundIfWon(timerId, gameState) {
-  try {
-    if (!(await checkWin()) || gameState.gameOver) return;
-    gameState.gameOver = true;
-
-    const timerElement = document.getElementById('timer');
-    const timeLast = timerElement.innerText;
-    const seconds = Number(timerElement.dataset.totalSeconds);
-    clearInterval(timerId);
-    saveScore(seconds);
-    dispCongratWindow();
-    document.getElementById('winTime').innerText = timeLast;
-  } catch (err) {
-    console.error('Win check failed:', err);
-  }
-}
-
-async function connectCells(timerId, gameState) {
-    let isDrawing = false;
-    let currentMoves = null;
-  let color = '';
-    let value = null;
-    let data_x = null;
-    let data_y = null;
-
-    const table = document.getElementById('table_container');
-  localStorage.setItem('move', JSON.stringify([]));
-
-    table.addEventListener('mousedown', (e) => {
-    const active = e.target.closest('.active');
-        if (!active) return;
-
-        isDrawing = true;
-    color = active.style.getPropertyValue('--cell-color');
-    value = active.getAttribute('value');
-        currentMoves = [];
-        data_x = active.dataset.x;
-        data_y = active.dataset.y;
-    playClickSound();
-    });
-
-  table.addEventListener('mousemove', (e) => {
-        if (!isDrawing) return;
-
-        const cell = e.target.closest('.cell');
-        if (!cell) return;
-
-        const span = cell.querySelector('span');
-        const NewX = span.dataset.x;
-        const NewY = span.dataset.y;
-
-    if (span.classList.contains('head-tail') && span.getAttribute('value') != value) {
-            isDrawing = false;
-            return;
-        }
-
-    if (!canExtendDraw(data_x, data_y, NewX, NewY, span, value)) return;
-
-    paintDrawnCell(span, color, value);
-    data_x = NewX;
-    data_y = NewY;
-
-    if (currentMoves && !currentMoves.includes(span.id) && !span.classList.contains('head-tail')) {
-      currentMoves.push(span.id);
-            playConnectSound();
-        }
-  });
-
-    window.addEventListener('mouseup', () => {
-        isDrawing = false;
-  });
-
-  table.addEventListener('mouseup', async () => {
-        isDrawing = false;
-
-        if (currentMoves && currentMoves.length > 0) {
-      const moves = JSON.parse(localStorage.getItem('move')) || [];
-            moves.push(currentMoves);
-      localStorage.setItem('move', JSON.stringify(moves));
-        }
-
-        currentMoves = null;
-    color = '';
-        value = null;
-        data_x = null;
-        data_y = null;
-
-    await finishRoundIfWon(timerId, gameState);
-    });
-}
-
-async function createFilledMap() {
-
-    const gameState = {
-        gameOver: false
-    };
-
-    document.getElementById("table_container").classList.remove("unactive");
-
-    const widthElement = document.getElementById("width");
-    const heightElement = document.getElementById("height");
-
-    if (!widthElement) { console.log('exit'); return; }
-    if (!heightElement) { console.log('exit'); return; }
-
-    //
-    //
-
-    // wait until "Material web component" initialized
-    await widthElement.updateComplete;
-    await heightElement.updateComplete;
-
-    const requestURL = `${backendApiUrl()}/create-map` + "?width=" + widthElement.value + "&height=" + heightElement.value;
-
-    let fetchMapData = await (async () => {
-        try {
-            const response = await fetch(requestURL, {
-                credentials: "include"
-            });
-            if (!response.ok) throw new Error("API error");
-            const data = await response.json();
-
-            return data;
-
-        } catch (error) {
-            console.error("Error:", error);
-            return;
-        }
-    })();
-
-    const table = document.querySelector('#table_container tbody');
-    const colors = [
-      '#0d9488',
-      '#16a34a',
-      '#0284c7',
-      '#d97706',
-      '#dc2626',
-      '#ea580c',
-      '#db2777',
-      '#65a30d',
-      '#7c3aed',
-      '#64748b',
-      '#0891b2',
-    ];
-
-    for (let i = 0; i < heightElement.value; i++) {
-        const row = table.rows[i];
-        for (let j = 0; j < widthElement.value; j++) {
-            const cell = row.cells[j];
-            const val = fetchMapData[i][j];
-
-            if (val == -1) {
-                cell.innerHTML = `<span data-x="${j}" data-y="${i}"></span>`;
-            } else {
-                const colorIndex = val % colors.length;
-                const currentColor = colors[colorIndex];
-
-                cell.innerHTML = `<span class="active head-tail" style="--cell-color: ${currentColor}" value="${val}" data-x="${j}" data-y="${i}">${val}</span>`;
-            }
-        }
-    }
-
-    const timerId = timer();
-    connectCells(timerId, gameState);
-    enableTouchSupport();
-    helpConnect(timerId, gameState);
-}
-
-function undoMove() {
-    const undoButton = document.getElementById('undo_button');
-    if (!undoButton) { console.log('exit'); return; }
-
-    undoButton.addEventListener('click', () => {
-        try {
-            const moves = JSON.parse(localStorage.getItem("move")) || [];
-            if (!moves || moves.length === 0) return;
-
-            const lastMoves = moves[moves.length - 1];
-            for (let i = 0; i < lastMoves.length; i++) {
-                const element = document.getElementById(`${lastMoves[i]}`);
-                if (!element) continue;
-
-                element.removeAttribute("id");
-                element.removeAttribute("value");
-                element.removeAttribute("class");
-                element.removeAttribute("style");
-            }
-
-            moves.pop();
-            localStorage.setItem("move", JSON.stringify(moves));
-        } finally {
-            undoButton.blur();
-        }
-    })
-}
-
-function resetMove() {
-
-    const resetButton = document.getElementById('reset_button');
-    if (!resetButton) { console.log('exit'); return; }
-
-    resetButton.addEventListener('click', () => {
-        try {
-            const table = document.getElementById('table_container');
-            if (!table) { console.log('exit'); return; }
-
-            const spans = table.querySelectorAll('.cell span');
-            if (!spans) { console.log('exit'); return; }
-
-            spans.forEach((element) => {
-                if (!element.classList.contains('head-tail') && element.classList.contains('active')) {
-                    element.removeAttribute("id");
-                    element.removeAttribute("value");
-                    element.removeAttribute("class");
-                    element.removeAttribute("style");
-                }
-            })
-        } finally {
-            resetButton.blur();
-        }
-    })
-
-    localStorage.setItem("move", JSON.stringify([]));
-}
-
-async function checkWin() {
-    const table = document.getElementById('table_container');
-    if (!table) return false;
-
-    const spans = table.querySelectorAll('.cell span');
-
-    const allActive = Array.from(spans).every(span =>
-        span.classList.contains('active')
-    );
-
-    if (!allActive) return false;
-
-    const firstRow = table.querySelector('tr');
-    const width = firstRow ? firstRow.querySelectorAll('td').length : 0;
-    const height = table.querySelectorAll('tr').length;
-
-    if (!width || !height || spans.length !== width * height) {
-        return false;
-    }
-
-    const arr = [];
-    spans.forEach((el, index) => {
-        const rowIndex = Math.floor(index / width);
-        if (!arr[rowIndex]) arr[rowIndex] = [];
-        arr[rowIndex].push(Number(el.getAttribute('value')));
-    });
-
-    try {
-        const response = await fetch(`${backendApiUrl()}/map-check`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(arr)
-        });
-        if (!response.ok) return false;
-        const data = await response.json();
-        return data === true;
-    } catch (error) {
-        console.error('map-check failed:', error);
-        return false;
-    }
-}
-
-function gameTimerHtml() {
-  return `<div class="field_container__parent-block-1 d-flex justify-content-between flex-wrap mb-3">
-                            <div class="field_container__block-1">
-                                <div class="field_container__properties_text fs-5">
-                                    Time
-                                </div>
-                                <div class="field_container__conf_props fs-6">
-                                    Duration
-                                </div>
-                            </div>
-
-                            <div class="field_container__block-2-round">
-
-                                <span class="text-center fs-5" id="timer">00:00</span>
-
-                                <div class="vertical-divider"></div>
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                    class="bi-clock" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
-                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
-                                </svg>
-                            </div>
-
-                        </div>`;
-}
-
-function gameControlsHtml() {
-  return `
-                        <div class="game-controls">
-
-                            <div class="btn btn-outline-secondary text-center d-flex justify-content-center align-items-center section-button"
-                                id="undo_button">Undo<span class="d-flex align-items-center ps-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708z" />
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <div class="btn btn-outline-danger text-center d-flex justify-content-center align-items-center section-button"
-                                id="reset_button">Reset<span class="d-flex align-items-center ps-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
-                                        <path
-                                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <div class="btn btn-outline-info text-center d-flex justify-content-center align-items-center section-button"
-                                id="tip_button">Hint<span class="d-flex align-items-center ps-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-lightbulb" viewBox="0 0 16 16">
-                                        <path
-                                            d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1" />
-                                    </svg>
-                                </span>
-                            </div>
-
-                            <div class="btn btn-outline-secondary text-center d-flex justify-content-center align-items-center section-button"
-                                id="sound_button">Sound<span class="d-flex align-items-center ps-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                                        class="bi bi-volume-down" viewBox="0 0 16 16">
-                                        <path
-                                            d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11M12.025 8a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8" />
-                                    </svg>
-                                </span>
-                            </div>
-                            
-                        </div>`;
-}
-
-function replaceFieldTopSection() {
-  const fieldHeader = document.querySelector('.field_container__parent-block-1');
-  const divider = document.querySelector('.field_container__divider');
-  const fieldContainer = document.querySelector('.field_container');
-  const button = document.getElementById('play_button');
-  const buttonContainer = document.getElementById('btn_container');
-  if (!fieldHeader || !divider || !fieldContainer || !button || !buttonContainer) return;
-
-    fieldHeader.remove();
-    divider.remove();
-    document.querySelector('.field_container__map-controls')?.remove();
-    button.remove();
-    runAnimation();
-  fieldContainer.insertAdjacentHTML('afterbegin', gameTimerHtml());
-  buttonContainer.innerHTML = gameControlsHtml();
-  resyncGameBoard();
-}
-
-function runAnimation() {
-    const fieldContainer = document.querySelector('.field_container');
-
-    if (window.matchMedia("(min-width: 577px)").matches) {
-        const appearance = fieldContainer.animate([
-            {
-                opacity: 0,
-                transform: 'scale(0.9)',
-                filter: 'blur(10px)'
-            },
-            {
-                opacity: 0.4,
-                transform: 'scale(0.94)',
-                filter: 'blur(0px)',
-                offset: 0.4
-            },
-            {
-                opacity: 1,
-                transform: 'scale(1)',
-                filter: 'blur(0px)'
-            }
-        ], {
-            duration: 700,
-            easing: 'ease-out',
-            fill: 'forwards'
-        });
-
-        appearance.finished.then(() => {
-            fieldContainer.animate([
-                { width: getComputedStyle(fieldContainer).width },
-                { width: '70vw' }
-            ], {
-                duration: 600,
-                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-                fill: 'forwards'
-            });
-        });
-
-    }
-}
-
-function timer() {
-    const timerElement = document.getElementById('timer');
-    if (!timerElement) { console.log('exit'); return; }
-
-    let minutes = 0;
-    let seconds = 0;
-
-    const timerId = setInterval(() => {
-        seconds++;
-
-        if (seconds >= 60) {
-            minutes++;
-            seconds = 0;
-        }
-
-        const seconds_text = String(seconds).padStart(2, '0');
-        const minutes_text = String(minutes).padStart(2, '0');
-        const time = minutes_text + ":" + seconds_text;
-
-        timerElement.innerText = time;
-
-        timerElement.dataset.totalSeconds = (minutes * 60 + seconds).toString();
-
-        if (minutes >= 60) {
-            clearInterval(timerId);
-            window.location.reload();
-        }
-    }, 1000);
-
-    return timerId;
-}
-
-function toggleMuteSound() {
-    const muteButton = document.getElementById('sound_button');
-    if (!muteButton) return;
-
-    if (localStorage.getItem("sound") === "muted") {
-        muteButton.innerHTML = `Sound off<span class="d-flex align-items-center ps-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
-        <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
-        </svg></span>`;
-    }
-
-    muteButton.addEventListener('click', () => {
-        const muted = localStorage.getItem("sound");
-        if (!muted) {
-            muteButton.innerHTML = `Sound off<span class="d-flex align-items-center ps-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
-        <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>
-        </svg></span>`;
-            localStorage.setItem("sound", "muted");
-
-        } else if (muted === "muted") {
-            muteButton.innerHTML = `Sound<span class="d-flex align-items-center ps-1"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                                        class="bi bi-volume-down" viewBox="0 0 16 16">
-                                        <path
-                                            d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zM6.312 6.39 8 5.04v5.92L6.312 9.61A.5.5 0 0 0 6 9.5H4v-3h2a.5.5 0 0 0 .312-.11M12.025 8a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8" />
-                                    </svg>
-                                </span>`;
-            localStorage.setItem("sound", "play");
-        } else if (muted === "play") {
-            muteButton.innerHTML = `Sound off<span class="d-flex align-items-center ps-1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
-        <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1 .708 0"/>
-        </svg></span>`;
-            localStorage.setItem("sound", "muted");
-        }
-        muteButton.blur();
-    });
-}
-
-function readBoardGrid(table) {
-            const spans = table.querySelectorAll('.cell span');
-            const firstRow = table.querySelector('tr');
-            const width = firstRow ? firstRow.querySelectorAll('td').length : 0;
-            const height = table.querySelectorAll('tr').length;
-  if (!width || !height || spans.length !== width * height) return null;
-
-  const grid = [];
-            for (let i = 0; i < height; i++) {
-    const row = [];
-                for (let j = 0; j < width; j++) {
-      const span = spans[i * width + j];
-      row.push(span.classList.contains('active') ? Number(span.getAttribute('value')) : -1);
-    }
-    grid.push(row);
-  }
-  return { spans, width, height, grid };
-}
-
-function colorForValue(value) {
-  const heads = document.querySelectorAll('#table_container .cell span.active.head-tail');
-  const match = Array.from(heads).find((el) => Number(el.getAttribute('value')) === value);
-  return match ? match.style.getPropertyValue('--cell-color') : '';
-}
-
-function applyHintMap(spans, width, height, mapResponse) {
-            for (let i = 0; i < height; i++) {
-                for (let j = 0; j < width; j++) {
-      const span = spans[i * width + j];
-      const next = mapResponse[i][j];
-
-      if (next !== -1) {
-        if (span.classList.contains('active')) continue;
-        span.id = 'item-' + crypto.randomUUID();
-        span.classList.add('active');
-        span.setAttribute('value', Number(next));
-        span.innerText = next;
-        const color = colorForValue(next);
-        if (color) span.style.setProperty('--cell-color', color);
-        continue;
-      }
-
-      if (span.classList.contains('active')) {
-        span.removeAttribute('id');
-        span.classList.remove('active');
-        span.removeAttribute('value');
-        span.innerText = null;
-      }
-    }
-  }
-}
-
-async function helpConnect(timerId, gameState) {
-  const helpButton = document.getElementById('tip_button');
-  if (!helpButton) return;
-
-  helpButton.addEventListener('click', async () => {
-    try {
-      const table = document.getElementById('table_container');
-      if (!table) return;
-
-      const board = readBoardGrid(table);
-      if (!board) return;
-
-      const hintResponse = await fetch(`${backendApiUrl()}/hint-check`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(board.grid),
-        credentials: 'include',
-      });
-      if (!hintResponse.ok) throw new Error('Unable to get hint!');
-
-      const mapResponse = (await hintResponse.json()).map;
-      if (!mapResponse) return;
-
-      applyHintMap(board.spans, board.width, board.height, mapResponse);
-      await finishRoundIfWon(timerId, gameState);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      helpButton.blur();
-    }
-  });
-}
-
-function playClickSound() {
-    if (!localStorage.getItem("sound") || localStorage.getItem("sound") === "play") {
-        const audio = new Audio(cellClick);
-        audio.play();
-    }
-}
-
-
-function playConnectSound() {
-    if (!localStorage.getItem("sound") || localStorage.getItem("sound") === "play") {
-        const audio = new Audio(cellConnect);
-        audio.play();
-    }
-}
-
-function playDisconnectSound() {
-    if (!localStorage.getItem("sound") || localStorage.getItem("sound") === "play") {
-        const audio = new Audio(cellDisconnect);
-        audio.play();
-    }
-}
-
-function changeUrl() {
-    history.pushState(
-        { page: "game" },
-        "",
-        "/game"
-    );
-
-    window.addEventListener("popstate", (e) => {
-        if (window.location.pathname === "/") {
-            window.location.reload();
-        }
-    });
-}
-
-function dispCongratWindow() {
-    const timerElement = document.getElementById('timer');
-    const time = timerElement.innerText;
-
-    const mainElement = document.getElementById('main');
-    const trophyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4.5-4 4.5"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4.5 4 4.5"/><path d="M4 1v1.6"/><path d="M3.2 1.8h1.6"/><path d="M20 .8v2.4"/><path d="M18.8 2h2.4"/></svg>`;
-    const modalResultWindow = `<div class="win-overlay" id="winOverlay">
-      <div class="win-modal" role="alertdialog" aria-modal="true" aria-labelledby="win-title">
-        <button type="button" class="win-modal__close" data-win-menu aria-label="Back to menu">${closeIcon()}</button>
-    <div class="win-header">
-          <div class="trophy" aria-hidden="true">${trophyIcon}</div>
-          <h2 id="win-title">Congratulations</h2>
-        <p>Puzzle solved</p>
-    </div>
-    <div class="win-stats">
-        <div class="stat">
-            <span>Time</span>
-            <b id="winTime">00:30</b>
-        </div>
-    </div>
-    <div class="win-buttons">
-          <button type="button" class="win-btn primary" id="win_play_again">Play again</button>
-          <button type="button" class="win-btn leaderboard" id="win_leaderboard"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13V8"/><path d="M8 13V3"/><path d="M13 13V6"/></svg>View leaderboard</button>
-          <button type="button" class="win-btn secondary" id="win_back_menu" data-win-menu>Back to menu</button>
-    </div>
-</div>
-        </div>`
-    if (!document.getElementById('winOverlay')) {
-        document.querySelector('body').style.overflow = 'hidden';
-        mainElement.insertAdjacentHTML('afterend', modalResultWindow);
-    }
-    playNewGame();
-    openLeaderboard();
-    backToMenu();
-}
-
-function playNewGame() {
-    const newGameButton = document.getElementById('win_play_again');
-    if (!newGameButton) return;
-    newGameButton.addEventListener('click', () => {
-        localStorage.setItem('autostart', "on");
-        window.location.href = "/";
-    })
-}
-
-function openLeaderboard() {
-    const leaderboardButton = document.getElementById('win_leaderboard');
-    if (!leaderboardButton) return;
-    leaderboardButton.addEventListener('click', () => {
-        localStorage.setItem('autostart', "off");
-        window.location.href = "/leaderboard/";
-    })
-}
-
-function backToMenu() {
-    const overlay = document.getElementById('winOverlay');
-    overlay?.addEventListener('click', (e) => {
-        if (e.target !== overlay) return;
-        localStorage.setItem('autostart', 'off');
-        window.location.href = '/';
-    });
-    document.querySelectorAll('[data-win-menu]').forEach((el) => {
-        el.addEventListener('click', () => {
-            localStorage.setItem('autostart', 'off');
-            window.location.href = '/';
-        });
-    });
-}
-
-async function saveScore(time) {
-    const query = `${backendApiUrl()}/score`;
-    const body = {
-        elapsedSeconds: time
-    }
-
-    try {
-        const response = await fetch(query,
-            {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(body)
-            });
-
-        if (response.status === 401 || response.status === 403) {
-            window.NumberLinkAuth?.open('signup');
-            throw new Error('Log in to save your score.');
-        }
-        if (!response.ok) throw new Error("API error");
-        await response.json();
-        return;
-    } catch (error) {
-        console.error("Error:", error);
-        return;
-    }
-}
-
-function prepareRound() {
-    changeUrl();
-    createFilledMap();
-    replaceFieldTopSection();
-    undoMove();
-    resetMove();
-    toggleMuteSound();
-}
-
-(async function launchRound() {
-    if (localStorage.getItem('autostart') === "on") {
-        localStorage.setItem('autostart', "off");
-        setTimeout(() => {
-            prepareRound();
-        }, 10);
-    }
-
-    const playButton = document.getElementById('play_button');
-    if (!playButton) return;
-
-    const startGame = () => {
-        if (!document.getElementById('play_button')) return;
-        closeMobileNav();
-        prepareRound();
-    };
-
-    playButton.addEventListener('click', startGame);
-
-    // Enter/Space work even when PLAY is not focused (mwc-select often steals focus)
-    window.addEventListener('keydown', (e) => {
-        if (!document.getElementById('play_button')) return;
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        if (e.repeat) return;
-
-        const tag = document.activeElement?.tagName;
-        if (tag === 'TEXTAREA' || tag === 'INPUT') return;
-
-        e.preventDefault();
-        startGame();
-    });
-})();
-
-function searchPathToken() {
-    const path = window.location.pathname.replace(/\/+$/, '') || '/';
-    const match = path.match(/^\/search(?:\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}))?$/i);
-    if (!match) return null;
-    return match[1] || '';
-}
-
-function isSearchPath() {
-    return searchPathToken() !== null;
-}
-
-function formatSharedSeconds(total) {
-    if (total < 60) return `${total}s`;
-    return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
-}
-
-function formatSharedHints(hints) {
-    if (hints === 0) return 'no hints';
-    if (hints === 1) return '1 hint';
-    return `${hints} hints`;
-}
-
-function openSharedResultModal({ title, score, meta, hint, empty, hideActions }) {
-    if (document.getElementById('shared_overlay')) return;
-
-    document.body.insertAdjacentHTML('beforeend', `
-        <div class="shared_overlay" id="shared_overlay" hidden>
-            <div class="shared_card${empty ? ' shared_card--empty' : ''}${hideActions ? ' shared_card--authed' : ''}" role="dialog" aria-modal="true" aria-labelledby="shared_kicker">
-                <button type="button" class="shared_close" id="shared_close" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" aria-hidden="true">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </button>
-
-                <div class="shared_kicker" id="shared_kicker">Shared result</div>
-
-                <div class="shared_result">
-                    <div class="shared_trophy" aria-hidden="true">
-                        <span class="confetti c1"></span>
-                        <span class="confetti c2"></span>
-                        <span class="confetti c3"></span>
-                        <span class="confetti c4"></span>
-                        <span class="confetti c5"></span>
-                        <span class="confetti c6"></span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                            <path d="M4 22h16"></path>
-                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                        </svg>
-                    </div>
-                    <div class="shared_player" id="shared_player"></div>
-                    <div class="shared_score">
-                        <span id="shared_score_value"></span>
-                        <span class="shared_score_unit">pts</span>
-                    </div>
-                    <div class="shared_meta" id="shared_meta"></div>
-                </div>
-
-                <div class="shared_cta_hint" id="shared_cta_hint"></div>
-
-                <div class="shared_actions">
-                    <button type="button" class="shared_btn shared_btn--solid" id="shared_signup">Sign up to play</button>
-                    <button type="button" class="shared_btn shared_btn--ghost" id="shared_login">Log in</button>
-                </div>
-            </div>
-        </div>
-    `);
-
-    document.getElementById('shared_player').textContent = title;
-    document.getElementById('shared_score_value').textContent = score == null ? '' : String(score);
-    document.getElementById('shared_meta').textContent = meta || '';
-    document.getElementById('shared_cta_hint').textContent = hint;
-
-    const overlay = document.getElementById('shared_overlay');
-
-    function closeSharedModal() {
-        if (overlay.hidden) return;
-        overlay.classList.remove('show');
-        setTimeout(() => {
-            overlay.hidden = true;
-        }, 180);
-        const url = new URL(window.location.href);
-        ['shared', 'access', 'player', 'size', 'seconds', 'hints', 'map_track_id'].forEach((k) => url.searchParams.delete(k));
-        const nextPath = isSearchPath() ? '/' : url.pathname;
-        window.history.replaceState({}, '', nextPath + url.search + url.hash);
-    }
-
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) closeSharedModal();
-    });
-    document.getElementById('shared_close').addEventListener('click', closeSharedModal);
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !overlay.hidden) closeSharedModal();
-    });
-
-    document.getElementById('shared_signup').addEventListener('click', () => {
-        closeSharedModal();
-        openAuth('signup');
-    });
-    document.getElementById('shared_login').addEventListener('click', () => {
-        closeSharedModal();
-        openAuth('login');
-    });
-
-    overlay.hidden = false;
-    requestAnimationFrame(() => overlay.classList.add('show'));
-}
-
-function syncSharedAuthActions() {
-    const card = document.querySelector('#shared_overlay .shared_card');
-    if (!card || card.classList.contains('shared_card--empty')) return;
-    card.classList.toggle('shared_card--authed', document.body.classList.contains('is-authenticated'));
-}
-
-function openSharedNotFoundModal(message, hint) {
-    openSharedResultModal({
-        empty: true,
-        title: message || 'Results not found',
-        score: null,
-        meta: '',
-        hint: hint || 'This shared result is not available.\nCheck the link is correct and has not expired.',
-    });
-}
-
-function openSharedFoundModal(result) {
-    const width = Number.parseInt(result.fieldWidth ?? '', 10);
-    const height = Number.parseInt(result.fieldHeight ?? result.fieldWidth ?? '', 10);
-    const seconds = Number.parseInt(result.elapsedSeconds ?? '', 10);
-    const rawHints = Number.parseInt(result.hints ?? '0', 10);
-    const points = Number.parseInt(result.points ?? '', 10);
-    const player = String(result.player || 'A NumberLink player').slice(0, 32);
-
-    if (!Number.isInteger(width) || width < 5 || width > 15) {
-        openSharedNotFoundModal('Results not found');
-        return;
-    }
-    if (!Number.isInteger(height) || height < 5 || height > 15) {
-        openSharedNotFoundModal('Results not found');
-        return;
-    }
-    if (!Number.isInteger(seconds) || seconds < 1 || seconds > 86400) {
-        openSharedNotFoundModal('Results not found');
-        return;
-    }
-    if (!Number.isInteger(points) || points < 0) {
-        openSharedNotFoundModal('Results not found');
-        return;
-    }
-    const hints = Number.isInteger(rawHints) && rawHints >= 0 && rawHints <= 99 ? rawHints : 0;
-
-    openSharedResultModal({
-        empty: false,
-        hideActions: document.body.classList.contains('is-authenticated'),
-        title: `${player} solved a ${width}×${height} puzzle`,
-        score: points,
-        meta: `${formatSharedSeconds(seconds)} · ${formatSharedHints(hints)}`,
-        hint: 'Think you can beat it? Join in and play.',
-    });
-    syncSharedAuthActions();
-}
-
-async function loadSharedSearchResult(token) {
-    if (!token) {
-        openSharedNotFoundModal('Results not found');
-        return;
-    }
-    const path = `/search/${encodeURIComponent(token)}`;
-    try {
-        const response = await fetch(`${backendApiUrl()}${path}`, { credentials: 'include' });
-        let body = null;
-        try {
-            body = await response.json();
-        } catch {
-            body = null;
-        }
-        if (response.status === 403) {
-            openSharedNotFoundModal(
-                typeof body?.message === 'string' ? body.message : 'This result is private',
-                'Log in with the account that owns this link.\nCheck that the link was entered correctly.',
-            );
-            return;
-        }
-        if (!response.ok) {
-            openSharedNotFoundModal(typeof body?.message === 'string' ? body.message : 'Results not found');
-            return;
-        }
-        openSharedFoundModal(body || {});
-        return;
-    } catch {
-        openSharedNotFoundModal('Results not found');
-    }
-}
-
-(function initSharedResultModal() {
-    document.addEventListener('numberlink:auth', syncSharedAuthActions);
-
-    const token = searchPathToken();
-    if (token !== null) {
-        loadSharedSearchResult(token);
-        return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('shared') !== '1') return;
-    if (params.get('access') === 'private') return;
-
-    const size = Number.parseInt(params.get('size') ?? '', 10);
-    const seconds = Number.parseInt(params.get('seconds') ?? '', 10);
-    const rawHints = Number.parseInt(params.get('hints') ?? '0', 10);
-    const player = (params.get('player') || 'A NumberLink player').slice(0, 32);
-
-    if (!Number.isInteger(size) || size < 5 || size > 15) return;
-    if (!Number.isInteger(seconds) || seconds < 1 || seconds > 86400) return;
-    const hints = Number.isInteger(rawHints) && rawHints >= 0 && rawHints <= 99 ? rawHints : 0;
-
-    const score = Math.round(10000 / seconds);
-    const time = seconds < 60
-        ? `${seconds}s`
-        : `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-    const hintsText = hints === 0 ? 'no hints' : hints === 1 ? '1 hint' : `${hints} hints`;
-
-    openSharedResultModal({
-        empty: false,
-        title: `${player} solved a ${size}×${size} puzzle`,
-        score,
-        meta: `${time} · ${hintsText}`,
-        hint: 'Think you can beat it? Join in and play.',
-    });
-})();

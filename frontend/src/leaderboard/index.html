@@ -110,8 +110,6 @@
                             <div class="sort_panel d-flex justify-content-left flex-wrap gap-4">
                                 <div class="sort_label">Sort by:</div>
 
-                                <button class="sort_btn time">Time</button>
-
                                 <div class="dropdown sort_dropdown">
                                     <button class="btn dropdown-toggle sort_btn" type="button" id="map-sort-button"
                                         data-bs-toggle="dropdown">
@@ -128,9 +126,9 @@
 
                                 </div>
 
-
-                                <button class="sort_btn avg_time">Average Time</button>
-                                <button class="sort_btn avg_score">Average Score</button>
+                                <button type="button" class="sort_btn no_hints" data-criterion="noHints">No hints</button>
+                                <button type="button" class="sort_btn avg_time" data-criterion="avgElapsedSeconds">Average Time</button>
+                                <button type="button" class="sort_btn avg_score" data-criterion="avgScore">Average Score</button>
                             </div>
 
 
@@ -158,6 +156,7 @@
                                                 <span class="lb_stat_label-1">Avg Score:</span>
                                                 <span class="lb_stat_value-1 score">—</span>
                                             </div>
+                                            <div class="lb_hints" id="self_hints" hidden></div>
                                         </div>
                                     </div>
                                 </div>

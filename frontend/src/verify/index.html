@@ -15,7 +15,11 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      background: #f4f4f5;
+      background:
+        radial-gradient(ellipse 76% 52% at 88% -12%, color-mix(in srgb, #0d9488 6%, transparent), transparent 58%),
+        radial-gradient(ellipse 52% 44% at 6% 108%, color-mix(in srgb, #14b8a6 4%, transparent), transparent 54%),
+        url("/topography.svg") 0 0 / 680px 680px,
+        color-mix(in srgb, #f4f4f5 88%, #f0fdfa 12%);
       font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: #71717a;
     }
