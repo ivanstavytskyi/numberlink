@@ -268,7 +268,7 @@ function resolveMediaUrl(url) {
 function renderAvatarHtml(draft) {
   const src = resolveMediaUrl(draft.avatarUrl);
   if (src) {
-    return `<img src="${escapeHtml(src)}" alt="" />`;
+    return `<img src="${escapeHtml(src)}" alt="" referrerpolicy="no-referrer" />`;
   }
   return escapeHtml(userInitials(draft.username));
 }
@@ -1781,6 +1781,18 @@ async function closeAccountSettings() {
   }
 }
 
+function historyIcon() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`;
+}
+
+function getHistoryMenuItemHtml() {
+  return `
+    <a href="/history/" class="auth-menu__settings" role="menuitem" data-auth-history>
+      <span class="auth-menu__settings-icon" aria-hidden="true">${historyIcon()}</span>
+      <span>History</span>
+    </a>`;
+}
+
 function getSettingsGearButtonHtml() {
   return `
     <button type="button" class="auth-menu__settings" role="menuitem" data-auth-settings>
@@ -1794,11 +1806,6 @@ function isSettingsOpen() {
   const overlay = document.getElementById('nl-settings-overlay');
   return Boolean(overlay?.classList.contains('is-open'));
 }
-
-/* ——— auth ——— */
-
-// Shared header auth actions + login/signup dialogs (all pages).
-
 
 /** Spring Security OAuth2 authorization entrypoints */
 function oauthProviders() {
@@ -2831,7 +2838,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 
   const avatarSrc = resolveMediaUrl(profile.avatarUrl);
   const avatarHtml = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : null;
 
   authRoot.querySelectorAll('.auth-user__avatar, .auth-menu__avatar').forEach((el) => {
@@ -2851,7 +2858,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 function buildUserMenuHtml(name, email, initials, avatarUrl) {
   const avatarSrc = resolveMediaUrl(avatarUrl);
   const avatarInner = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : initials;
   return `
     <div class="auth-user-wrap">
@@ -2879,6 +2886,7 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
             ${email ? `<p class="auth-menu__email">${email}</p>` : ''}
           </div>
         </div>
+        ${getHistoryMenuItemHtml()}
         ${getSettingsGearButtonHtml()}
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
@@ -3272,13 +3280,6 @@ window.NumberLinkAuth = {
 
 initAuthUi();
 
-/* ——— guest gate ——— */
-/**
- * Guest access gate for Leaderboard / Reviews.
- * Skills: baseline-ui (one primary action), frontend-design (invite to act),
- * better-ui (elev + concentric radii), better-typography, better-colors (tokens).
- */
-
 function guestGateId() {
   return 'guest-gate';
 }
@@ -3292,12 +3293,6 @@ function lockIcon() {
 `;
 }
 
-/**
- * Page-specific copy (UX writing):
- * - Don't assume an account already exists ("Sign in" alone is wrong)
- * - Name both paths: create account OR log in
- * - Lead with the user goal, then the requirement
- */
 function guestGateCopy() {
   return {
   leaderboard: {
@@ -3439,13 +3434,6 @@ window.NumberLinkGuest = {
 
 initGuestGate();
 
-
-/* ——— mobile nav ——— */
-
-// Shared mobile hamburger navigation.
-// On small screens the nav links collapse behind a burger button;
-// desktop layout is untouched. Auth actions stay visible on the right.
-
 function burgerIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
   <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
@@ -3546,9 +3534,6 @@ function initMobileNav() {
 
 initMobileNav();
 
-/* ——— page ——— */
-
-
 function main() {
     leaderBoarTimelineButtons();
     sortButtonsConfiguration();
@@ -3625,15 +3610,13 @@ sortButtons.forEach(button => {
 }
 
 function resolveLeaderboardFilters() {
-  const sortMap = { Time: 'time', 'Average Time': 'avgElapsedSeconds', 'Average Score': 'avgScore' };
-
   const period = document.getElementById('leaderboard-period')?.dataset.period || '';
-  const sortLabel = document.querySelector('.active.sort_btn:not(.dropdown-toggle)')?.innerHTML;
+  const sortBtn = document.querySelector('.active.sort_btn:not(.dropdown-toggle)');
   const mapSize = document.getElementById('map-sort-button')?.dataset.size || '';
 
   return {
     period,
-    criterion: sortMap[sortLabel] || '',
+    criterion: sortBtn?.dataset.criterion || '',
     mapSize,
   };
 }
@@ -3692,8 +3675,23 @@ function fillLbAvatar(el, username, avatarUrl) {
   if (!el) return;
   const src = resolveMediaUrl(avatarUrl);
   el.innerHTML = src
-    ? `<img src="${escapeHtml(src)}" alt="">`
+    ? `<img src="${escapeHtml(src)}" alt="" referrerpolicy="no-referrer">`
     : escapeHtml(userInitials(username));
+}
+
+function hintsLabel(hints) {
+  if (hints === 0) return 'no hints';
+  if (hints === 1) return '1 hint';
+  return `${hints} hints`;
+}
+
+function lbHintsHtml(hints, variant) {
+  const n = Number(hints);
+  if (!Number.isInteger(n) || n < 0) return '';
+  const clean = n === 0
+    ? `<span class="lb_hint_badge clean">Clean solve</span>`
+    : '';
+  return `<div class="lb_hints lb_hints--${variant}">${clean}<span class="lb_hint_meta">${hintsLabel(n)}</span></div>`;
 }
 
 function buildLeaderboardItemHtml(item, realIndex) {
@@ -3702,7 +3700,7 @@ function buildLeaderboardItemHtml(item, realIndex) {
   const player = item.player || '--';
   const src = resolveMediaUrl(item.avatarUrl);
   const avatarInner = src
-    ? `<img src="${escapeHtml(src)}" alt="">`
+    ? `<img src="${escapeHtml(src)}" alt="" referrerpolicy="no-referrer">`
     : escapeHtml(userInitials(player));
 
   return `
@@ -3721,6 +3719,7 @@ function buildLeaderboardItemHtml(item, realIndex) {
           <div class="lb_stat_item"><span class="lb_stat_label">Map Size:</span><span class="lb_stat_value">${mapSize}</span></div>
           <div class="lb_stat_item"><span class="lb_stat_label">Avg Time:</span><span class="lb_stat_value">${item.avgElapsedSeconds ? item.avgElapsedSeconds + 's' : '--'}</span></div>
           <div class="lb_stat_item"><span class="lb_stat_label">Avg Score:</span><span class="lb_stat_value">${item.avgScore || '--'}</span></div>
+          ${lbHintsHtml(item.hints, 'row')}
         </div>
       </div>
     </div>
@@ -3872,6 +3871,19 @@ async function generateUserStats() {
                 data.avgElapsedSeconds != null && data.avgElapsedSeconds !== '' ? `${data.avgElapsedSeconds}s` : '—';
             document.querySelector('.lb_stat_value-1.score').innerHTML =
                 data.avgScore != null && data.avgScore !== '' ? data.avgScore : '—';
+
+            const selfHints = document.getElementById('self_hints');
+            if (selfHints) {
+                const n = Number(data.hints);
+                const hasScore = data.points != null && data.points !== '' && data.points !== '--';
+                if (hasScore && Number.isInteger(n) && n >= 0) {
+                    selfHints.innerHTML = `${n === 0 ? '<span class="lb_hint_badge clean">Clean solve</span>' : ''}<span class="lb_hint_meta">${hintsLabel(n)}</span>`;
+                    selfHints.hidden = false;
+                } else {
+                    selfHints.replaceChildren();
+                    selfHints.hidden = true;
+                }
+            }
 
             if (data.rank != null && !Number.isNaN(Number(data.rank))) {
                 const rankClass = rankMedalClass(Number(data.rank) - 1);
