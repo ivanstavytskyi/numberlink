@@ -38,6 +38,8 @@
   --radius-btn: 8px;
   --radius-control: 8px;
   --focus-ring: 0 0 0 3px rgba(13, 148, 136, 0.35);
+  --topo: url("/topography.svg");
+  --ground: color-mix(in srgb, var(--paper) 88%, var(--accent-soft) 12%);
 }
 
 html {
@@ -51,9 +53,10 @@ body {
   justify-content: flex-start;
   font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
   background:
-    radial-gradient(ellipse 70% 50% at 85% -10%, rgba(13, 148, 136, 0.08), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 10% 100%, rgba(20, 184, 166, 0.06), transparent 50%),
-    var(--paper) !important;
+    radial-gradient(ellipse 76% 52% at 88% -12%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 58%),
+    radial-gradient(ellipse 52% 44% at 6% 108%, color-mix(in srgb, var(--accent-bright) 4%, transparent), transparent 54%),
+    var(--topo) 0 0 / 680px 680px,
+    var(--ground) !important;
   position: relative;
   min-height: 100vh;
   color: var(--ink);
@@ -713,6 +716,8 @@ nav {
   line-height: 1;
   color: var(--ink, #18181b);
   background: transparent;
+  text-decoration: none;
+  box-sizing: border-box;
   cursor: pointer;
   transition:
     background-color 0.14s var(--ease-soft, cubic-bezier(0.2, 0, 0, 1)),
@@ -1614,9 +1619,9 @@ nav {
 .nl-settings__nav {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  background: var(--paper, #f4f4f5);
+  gap: 2px;
+  padding: 16px 12px;
+  background: var(--surface, #fff);
   border-right: 1px solid var(--border, #e4e4e7);
   overflow-y: auto;
 }
@@ -1627,15 +1632,17 @@ nav {
   align-items: center;
   gap: 10px;
   width: 100%;
+  min-height: 36px;
   text-align: left;
   border: none;
-  border-radius: var(--radius-btn);
-  padding: 10px 12px;
+  border-radius: 8px;
+  padding: 8px 10px;
   font-family: inherit;
   font-size: 0.875rem;
-  font-weight: 650;
-  color: #3f3f46;
+  font-weight: 500;
+  color: #52525b;
   background: transparent;
+  box-shadow: none;
   cursor: pointer;
   transition:
     background-color 0.14s var(--ease-soft, cubic-bezier(0.2, 0, 0, 1)),
@@ -1643,14 +1650,20 @@ nav {
 }
 
 .nl-settings__nav-btn:hover {
-  background: rgba(255, 255, 255, 0.72);
+  background: #f4f4f5;
   color: var(--ink, #18181b);
 }
 
 .nl-settings__nav-btn[aria-current="page"] {
-  background: #fff;
-  color: var(--accent-deep, #0f766e);
-  box-shadow: 0 1px 2px rgba(24, 24, 27, 0.05);
+  background: #ececee;
+  color: var(--ink, #18181b);
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.nl-settings__nav-btn[aria-current="page"]:hover {
+  background: #ececee;
+  color: var(--ink, #18181b);
 }
 
 .nl-settings__nav-btn:focus-visible {
@@ -1660,8 +1673,8 @@ nav {
 
 .nl-settings__nav-icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1671,11 +1684,12 @@ nav {
 
 .nl-settings__nav-icon svg {
   display: block;
+  stroke-width: 1.75;
 }
 
+.nl-settings__nav-btn:hover .nl-settings__nav-icon,
 .nl-settings__nav-btn[aria-current="page"] .nl-settings__nav-icon {
-  color: var(--accent-deep, #0f766e);
-  background: transparent;
+  color: inherit;
 }
 
 .nl-settings__main {
@@ -2394,43 +2408,44 @@ nav {
 
   .nl-settings__nav {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px;
-    margin: 12px 16px 0;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 8px;
+    margin: 0;
     border-right: none;
-    border-radius: 16px;
-    background: var(--paper, #f4f4f5);
+    border-bottom: 1px solid var(--border, #e4e4e7);
+    border-radius: 0;
+    background: var(--surface, #fff);
     overflow: hidden;
   }
 
   .nl-settings__nav-btn {
     position: relative;
-    text-align: left;
-    padding: 8px 12px;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 6px;
     min-height: 44px;
-    font-size: 0.875rem;
-    font-weight: 650;
-    border-radius: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-radius: 0;
     background: transparent;
     box-shadow: none;
     white-space: nowrap;
   }
 
   .nl-settings__nav-btn:hover {
-    background: rgba(255, 255, 255, 0.72);
+    background: transparent;
     color: var(--ink, #18181b);
   }
 
-  .nl-settings__nav-btn[aria-current="page"] {
-    background: #fff;
-    color: var(--accent-deep, #0f766e);
-    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.05);
-  }
-
+  .nl-settings__nav-btn[aria-current="page"],
   .nl-settings__nav-btn[aria-current="page"]:hover {
-    background: #fff;
-    color: var(--accent-deep, #0f766e);
+    background: transparent;
+    color: var(--ink, #18181b);
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 #0f766e;
   }
 
   .nl-settings__panel-title {
@@ -2740,7 +2755,7 @@ body.guest-locked main {
 }
 
 body.guest-locked main .mt-4.container-fluid {
-  filter: blur(8px);
+  filter: blur(2.5px);
 }
 
 body.guest-locked .field_container {
@@ -3335,6 +3350,46 @@ body {
 .lb_stat_value-1 {
     font-family: 'Nunito';
     color: #ffffff;
+}
+
+.lb_hints {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-self: center;
+}
+
+.lb_hint_badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-family: 'Nunito SemiBold';
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.lb_hint_badge.clean {
+  color: #0f766e;
+  background: #f0fdfa;
+}
+
+.lb_hint_meta {
+  font-family: 'Nunito SemiBold';
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #71717a;
+}
+
+.leaderboard_item.self .lb_hint_badge.clean {
+  color: #ecfdf5;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.leaderboard_item.self .lb_hint_meta {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .rank {
