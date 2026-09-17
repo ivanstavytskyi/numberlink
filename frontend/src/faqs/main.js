@@ -268,7 +268,7 @@ function resolveMediaUrl(url) {
 function renderAvatarHtml(draft) {
   const src = resolveMediaUrl(draft.avatarUrl);
   if (src) {
-    return `<img src="${escapeHtml(src)}" alt="" />`;
+    return `<img src="${escapeHtml(src)}" alt="" referrerpolicy="no-referrer" />`;
   }
   return escapeHtml(userInitials(draft.username));
 }
@@ -1779,6 +1779,18 @@ async function closeAccountSettings() {
   }
 }
 
+function historyIcon() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`;
+}
+
+function getHistoryMenuItemHtml() {
+  return `
+    <a href="/history/" class="auth-menu__settings" role="menuitem" data-auth-history>
+      <span class="auth-menu__settings-icon" aria-hidden="true">${historyIcon()}</span>
+      <span>History</span>
+    </a>`;
+}
+
 function getSettingsGearButtonHtml() {
   return `
     <button type="button" class="auth-menu__settings" role="menuitem" data-auth-settings>
@@ -1792,11 +1804,6 @@ function isSettingsOpen() {
   const overlay = document.getElementById('nl-settings-overlay');
   return Boolean(overlay?.classList.contains('is-open'));
 }
-
-/* ——— auth ——— */
-
-// Shared header auth actions + login/signup dialogs (all pages).
-
 
 /** Spring Security OAuth2 authorization entrypoints */
 function oauthProviders() {
@@ -2829,7 +2836,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 
   const avatarSrc = resolveMediaUrl(profile.avatarUrl);
   const avatarHtml = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : null;
 
   authRoot.querySelectorAll('.auth-user__avatar, .auth-menu__avatar').forEach((el) => {
@@ -2849,7 +2856,7 @@ function applyLocalProfileToHeader(authRoot, profile) {
 function buildUserMenuHtml(name, email, initials, avatarUrl) {
   const avatarSrc = resolveMediaUrl(avatarUrl);
   const avatarInner = avatarSrc
-    ? `<img src="${escapeHtml(avatarSrc)}" alt="" />`
+    ? `<img src="${escapeHtml(avatarSrc)}" alt="" referrerpolicy="no-referrer" />`
     : initials;
   return `
     <div class="auth-user-wrap">
@@ -2877,6 +2884,7 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
             ${email ? `<p class="auth-menu__email">${email}</p>` : ''}
           </div>
         </div>
+        ${getHistoryMenuItemHtml()}
         ${getSettingsGearButtonHtml()}
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
@@ -3270,12 +3278,6 @@ window.NumberLinkAuth = {
 
 initAuthUi();
 
-/* ——— mobile nav ——— */
-
-// Shared mobile hamburger navigation.
-// On small screens the nav links collapse behind a burger button;
-// desktop layout is untouched. Auth actions stay visible on the right.
-
 function burgerIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
   <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
@@ -3375,8 +3377,5 @@ function initMobileNav() {
 }
 
 initMobileNav();
-
-/* ——— page ——— */
-
 
 requestAnimationFrame(() => { document.body.style.opacity = '1'; });
