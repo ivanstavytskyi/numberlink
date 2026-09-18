@@ -990,14 +990,14 @@ function changeUrl() {
 
 function dispCongratWindow(savedGame = null) {
     const mainElement = document.getElementById('main');
-    const trophyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4.5-4 4.5"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4.5 4 4.5"/><path d="M4 1v1.6"/><path d="M3.2 1.8h1.6"/><path d="M20 .8v2.4"/><path d="M18.8 2h2.4"/></svg>`;
+    const trophyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4.5-4 4.5"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4.5 4 4.5"/><path d="M4 1v1.6"/><path d="M3.2 1.8h1.6"/><path d="M20 .8v2.4"/><path d="M18.8 2h2.4"/></svg>`;
     const modalResultWindow = `<div class="win-overlay" id="winOverlay">
-      <div class="win-modal" role="alertdialog" aria-modal="true" aria-labelledby="win-title">
+      <div class="win-modal" role="alertdialog" aria-modal="true" aria-labelledby="win-title" aria-describedby="win-lead">
         <button type="button" class="win-modal__close" data-win-menu aria-label="Back to menu">${closeIcon()}</button>
     <div class="win-header">
           <div class="trophy" aria-hidden="true">${trophyIcon}</div>
           <h2 id="win-title">Congratulations</h2>
-        <p>Puzzle solved</p>
+        <p id="win-lead">Puzzle solved</p>
     </div>
     <div class="win-stats">
         <div class="stat">
@@ -1007,14 +1007,9 @@ function dispCongratWindow(savedGame = null) {
     </div>
     <div class="win-buttons">
           <button type="button" class="win-btn primary" id="win_play_again">Play again</button>
-<<<<<<< Updated upstream
-          <button type="button" class="win-btn leaderboard" id="win_leaderboard"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13V8"/><path d="M8 13V3"/><path d="M13 13V6"/></svg>View leaderboard</button>
-          <button type="button" class="win-btn secondary" id="win_back_menu" data-win-menu>Back to menu</button>
-=======
           <button type="button" class="win-btn leaderboard" id="win_leaderboard"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13V8"/><path d="M8 13V3"/><path d="M13 13V6"/></svg>View leaderboard</button>
           <button type="button" class="win-btn share" id="win_share" hidden><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>Share result</button>
           <button type="button" class="win-btn secondary" id="win_back_menu" data-win-menu><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3"/><path d="M7 4 3 8l4 4"/></svg>Back to menu</button>
->>>>>>> Stashed changes
     </div>
 </div>
         </div>`
