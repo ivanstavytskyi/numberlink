@@ -6,6 +6,7 @@ import numberlink.dto.score.response.ScoreResponseDto;
 import numberlink.dto.score.response.ScoreResponseSelfDto;
 import numberlink.entity.UserEntity;
 import numberlink.game.core.GameConstants;
+import numberlink.repository.UserRepository;
 import numberlink.service.auth.AuthService;
 import numberlink.service.jpa.ScoreService;
 import jakarta.servlet.http.HttpSession;
@@ -22,10 +23,12 @@ public class ScoreServiceRest {
 
     private final ScoreService scoreService;
     private final AuthService authService;
+    private final UserRepository userRepository;
 
-    public ScoreServiceRest(ScoreService scoreService, AuthService authService) {
+    public ScoreServiceRest(ScoreService scoreService, AuthService authService, UserRepository userRepository) {
         this.scoreService = scoreService;
         this.authService = authService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
@@ -57,8 +60,15 @@ public class ScoreServiceRest {
         Object hintsUsedObj = session.getAttribute("hints_used");
         int hints = (hintsUsedObj instanceof Integer value) ? value : 0;
 
-        scoreService.addScore(user, scoreRequestDto.getElapsedSeconds(), width, height, hints);
-        return ResponseEntity.ok(Map.of("status", "ok"));
+        ScoreHistoryDto saved = scoreService.addScore(
+                user,
+                scoreRequestDto.getElapsedSeconds(),
+                width,
+                height,
+                hints
+        );
+
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/sort")

@@ -1,5 +1,6 @@
 @import './shared/styles/base.css';
 @import './shared/styles/settings.css';
+@import './shared/styles/share.css';
 
 nav {
   padding: 0 22px;
@@ -2310,6 +2311,30 @@ tr:last-child td:last-child {
 
 @media (hover: hover) and (pointer: fine) {
   .win-btn.leaderboard:hover {
+    background: var(--accent, #0d9488);
+    border-color: var(--accent, #0d9488);
+    color: #ffffff;
+  }
+}
+
+.win-btn.share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid rgba(13, 148, 136, 0.35);
+  color: var(--accent-deep, #0f766e);
+  font-weight: 600;
+}
+
+.win-btn.share svg {
+  flex-shrink: 0;
+  transform: translateY(-0.5px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .win-btn.share:hover {
     background: var(--accent, #0d9488);
     border-color: var(--accent, #0d9488);
     color: #ffffff;
