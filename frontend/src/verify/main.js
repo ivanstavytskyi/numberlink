@@ -1,9 +1,7 @@
+import { backendApiUrl } from '../shared/api.js';
+
 const CONFIRMED_FLAG = 'nl_email_just_confirmed';
 const CONFIRM_ERROR_FLAG = 'nl_email_confirm_error';
-
-function backendApiUrl() {
-  return '/api';
-}
 
 async function verifyEmail(token) {
   const response = await fetch(`${backendApiUrl()}/verify-email`, {

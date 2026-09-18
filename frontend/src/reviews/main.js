@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import * as bootstrap from 'bootstrap';
+<<<<<<< HEAD
 
 function backendOrigin() {
   return '';
@@ -3385,107 +3386,16 @@ window.NumberLinkGuest = {
   isAuthenticated,
   whenAuthenticated,
 };
+=======
+import { backendApiUrl } from '../shared/api.js';
+import { escapeHtml, userInitials, resolveMediaUrl } from '../shared/html.js';
+import '../shared/auth/auth-ui.js';
+import { initMobileNav } from '../shared/nav.js';
+import { initGuestGate } from '../shared/guest.js';
+import { updatePaginationUI as renderPager } from '../shared/pagination.js';
+>>>>>>> 03e0aaf (refactor(frontend): extract shared page modules and common styles)
 
 initGuestGate();
-
-function burgerIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg>`;
-}
-
-function mobileCloseIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
-}
-
-function syncMobileHeaderBarHeight(container) {
-  if (!container) return;
-  const header = document.querySelector('header');
-  const top = header ? Math.round(header.getBoundingClientRect().bottom) : container.offsetHeight;
-  document.documentElement.style.setProperty('--mobile-header-bar-h', `${top}px`);
-}
-
-function syncMobileNavPlacement(container, drawer, navLinks) {
-  const github = container.querySelector('.header_github');
-  if (window.matchMedia('(max-width: 576px)').matches) {
-    navLinks.forEach((link) => drawer.appendChild(link));
-  } else {
-    navLinks.forEach((link) => container.insertBefore(link, github));
-  }
-}
-
-function closeMobileNav() {
-  const container = document.querySelector('.header_container');
-  const drawer = document.querySelector('.mobile-nav-drawer');
-  const scrim = document.querySelector('.mobile-nav-scrim');
-  if (!container?.classList.contains('menu-open')) return;
-
-  container.classList.remove('menu-open');
-  if (drawer) drawer.hidden = true;
-  if (scrim) scrim.hidden = true;
-  const toggle = container.querySelector('.menu_toggle');
-  if (toggle) {
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
-    toggle.innerHTML = burgerIcon();
-  }
-}
-
-function initMobileNav() {
-  const header = document.querySelector('header');
-  const container = document.querySelector('.header_container');
-  if (!header || !container || container.querySelector('.menu_toggle')) return;
-
-  const navLinks = [...container.querySelectorAll('a:not(.header_github):not(.numberlink_nav)')];
-  const drawer = document.createElement('div');
-  drawer.className = 'mobile-nav-drawer';
-  drawer.hidden = true;
-  document.body.appendChild(drawer);
-
-  const scrim = document.createElement('div');
-  scrim.className = 'mobile-nav-scrim';
-  scrim.hidden = true;
-  document.body.appendChild(scrim);
-  scrim.addEventListener('click', closeMobileNav);
-
-  const mq = window.matchMedia('(max-width: 576px)');
-  syncMobileNavPlacement(container, drawer, navLinks);
-  mq.addEventListener('change', () => {
-    closeMobileNav();
-    syncMobileNavPlacement(container, drawer, navLinks);
-    syncMobileHeaderBarHeight(container);
-  });
-
-  const btn = document.createElement('button');
-  btn.className = 'menu_toggle';
-  btn.type = 'button';
-  btn.setAttribute('aria-label', 'Open menu');
-  btn.setAttribute('aria-expanded', 'false');
-  btn.innerHTML = burgerIcon();
-
-  container.prepend(btn);
-  syncMobileHeaderBarHeight(container);
-  window.addEventListener('resize', () => syncMobileHeaderBarHeight(container));
-
-  btn.addEventListener('click', () => {
-    syncMobileHeaderBarHeight(container);
-    const open = container.classList.toggle('menu-open');
-    drawer.hidden = !open;
-    scrim.hidden = !open;
-    btn.setAttribute('aria-expanded', String(open));
-    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    btn.innerHTML = open ? mobileCloseIcon() : burgerIcon();
-    requestAnimationFrame(() => {
-      btn.blur();
-      container.querySelectorAll('.auth-btn').forEach((el) => el.blur());
-    });
-  });
-
-  drawer.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMobileNav);
-  });
-}
-
 initMobileNav();
 
 
@@ -3648,54 +3558,12 @@ async function pagePagination() {
     }
 
     function updatePaginationUI() {
-        const totalPages = Math.ceil(allData.length / itemsPerPage);
-
-        const startRange = (allData.length === 0) ? 0 : (currentPage - 1) * itemsPerPage + 1;
-        const endRange = Math.min(currentPage * itemsPerPage, allData.length);
-
-        document.querySelector('.pg_range').textContent = `${startRange}–${endRange}`;
-        document.querySelector('.pg_total').textContent = allData.length;
-
-        const paginationContainer = document.querySelector('.pagination');
-        paginationContainer.innerHTML = '';
-
-        const prevBtn = document.createElement('button');
-        prevBtn.className = 'page_btn';
-        prevBtn.textContent = '‹';
-        prevBtn.disabled = (currentPage === 1);
-        prevBtn.onclick = () => renderPage(currentPage - 1);
-        paginationContainer.appendChild(prevBtn);
-
-        let startPage = 1;
-        let endPage = totalPages;
-
-        if (totalPages > 3) {
-            if (currentPage <= 2) {
-                startPage = 1;
-                endPage = 3;
-            } else if (currentPage >= totalPages - 1) {
-                startPage = totalPages - 2;
-                endPage = totalPages;
-            } else {
-                startPage = currentPage - 1;
-                endPage = currentPage + 1;
-            }
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = 'page_btn' + (i === currentPage ? ' active' : '');
-            pageBtn.textContent = i;
-            pageBtn.onclick = () => renderPage(i);
-            paginationContainer.appendChild(pageBtn);
-        }
-
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'page_btn';
-        nextBtn.textContent = '›';
-        nextBtn.disabled = (currentPage === totalPages || totalPages === 0);
-        nextBtn.onclick = () => renderPage(currentPage + 1);
-        paginationContainer.appendChild(nextBtn);
+        renderPager({
+            total: allData.length,
+            page: currentPage,
+            pageSize: itemsPerPage,
+            onPage: renderPage,
+        });
     }
 
 

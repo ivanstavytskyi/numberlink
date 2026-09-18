@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
+<<<<<<< HEAD
 import * as bootstrap from 'bootstrap';
 
 function backendOrigin() {
@@ -3331,7 +3332,9 @@ function initMobileNav() {
     link.addEventListener('click', closeMobileNav);
   });
 }
+=======
+import '../shared/auth/auth-ui.js';
+import { initMobileNav } from '../shared/nav.js';
+>>>>>>> 03e0aaf (refactor(frontend): extract shared page modules and common styles)
 
 initMobileNav();
-
-requestAnimationFrame(() => { document.body.style.opacity = '1'; });
