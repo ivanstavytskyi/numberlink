@@ -2046,6 +2046,10 @@ body.guest-locked .field_container {
   }
 
   .history_item_metrics {
-    gap: 16px;
+    gap: 12px;
+  }
+
+  .history_share {
+    flex-shrink: 0;
   }
 }
