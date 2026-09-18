@@ -1,13 +1,7 @@
-function backendOrigin() {
-  return '';
-}
-function backendApiUrl() {
-  return `${backendOrigin()}/api`;
-}
-
-function closeIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
-}
+import { backendOrigin, backendApiUrl } from '../api.js';
+import { escapeHtml, userInitials, resolveMediaUrl } from '../html.js';
+import { closeIcon } from '../icons.js';
+import { closeMobileNav } from '../nav.js';
 
 function gearIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.115 2.693l.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.115l-.094.319c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.693-1.115z"/></svg>`;
@@ -166,21 +160,9 @@ async function revokeOtherUserSessions() {
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.message || 'Could not sign out other devices.');
+    throw new Error(data.message || 'Could not terminate other sessions.');
   }
   return mapUserSessions(data);
-}
-
-async function revokeAllUserSessions() {
-  const response = await fetch(`${backendApiUrl()}/me/sessions/revoke-all`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { Accept: 'application/json' },
-  });
-  if (!response.ok && response.status !== 204) {
-    const data = await response.json().catch(() => ({}));
-    throw new Error(data.message || 'Could not sign out all devices.');
-  }
 }
 
 function settingsState() {
@@ -202,25 +184,6 @@ function prefersReducedMotion() {
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
-function userInitials(username = '') {
-  const cleaned = String(username).trim();
-  if (!cleaned) return '?';
-  const parts = cleaned.split(/[\s._-]+/).filter(Boolean);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-  return cleaned.slice(0, 2).toUpperCase();
 }
 
 function buildDraftFromUser(user) {
@@ -252,13 +215,6 @@ function mapSizeOptions(selected) {
     html += `<option value="${n}" ${Number(selected) === n ? 'selected' : ''}>${n}</option>`;
   }
   return html;
-}
-
-function resolveMediaUrl(url) {
-  if (!url) return null;
-  if (/^(data:|blob:|https?:)/i.test(url)) return url;
-  const path = url.startsWith('/') ? url : `/${url}`;
-  return `${backendOrigin()}${path}`;
 }
 
 function renderAvatarHtml(draft) {
@@ -441,7 +397,7 @@ function panelSecurity(draft, sessions) {
           </p>
           <p class="nl-settings__session-detail">${escapeHtml(s.place)} · ${escapeHtml(s.lastActive)}</p>
         </div>
-        <button type="button" class="nl-settings__session-action" data-settings-revoke="${escapeHtml(s.id)}"${s.current ? ' data-settings-revoke-current' : ''}>Sign out</button>
+        ${s.current ? '' : `<button type="button" class="nl-settings__session-action" data-settings-revoke="${escapeHtml(s.id)}" aria-label="Terminate this session">${closeIcon()}</button>`}
       </div>`
     )
     .join('');
@@ -477,13 +433,12 @@ function panelSecurity(draft, sessions) {
         <h4 class="nl-settings__block-title">Sessions</h4>
         <p class="nl-settings__block-lead">Sign out any device you do not recognize.</p>
         <div data-settings-sessions>${rows || '<p class="nl-settings__hint">No other sessions.</p>'}</div>
-        <div class="nl-settings__actions nl-settings__actions--sessions">
-          <button type="button" class="nl-settings__text-action" data-settings-revoke-others ${sessions.some((s) => !s.current) ? '' : 'hidden'}>
-            Sign out other devices
+        <div class="nl-settings__actions nl-settings__actions--sessions"${sessions.some((s) => !s.current) ? '' : ' hidden'}>
+          <button type="button" class="nl-settings__terminate" data-settings-revoke-others>
+            <span class="nl-settings__terminate-icon" aria-hidden="true"></span>
+            <span>Terminate all other sessions</span>
           </button>
-          <button type="button" class="nl-settings__text-action" data-settings-revoke-all>
-            Sign out all devices
-          </button>
+          <p class="nl-settings__block-lead">Log out all devices except for this one.</p>
         </div>
         ${statusSlot('security:sessions')}
       </div>
@@ -1324,19 +1279,9 @@ function onSessionRevoke(event) {
   if (!btn) return;
 
   const id = btn.getAttribute('data-settings-revoke');
-  const isCurrent = btn.hasAttribute('data-settings-revoke-current');
   btn.disabled = true;
   revokeUserSession(id)
-    .then(async (sessions) => {
-      if (isCurrent) {
-        await closeAccountSettings();
-        const authRoot = document.querySelector('.header_auth');
-        setDocumentAuthState(null);
-        if (authRoot) {
-          await transitionAuthChrome(authRoot, () => renderGuestAuth(authRoot));
-        }
-        return;
-      }
+    .then((sessions) => {
       settingsState().sessions = sessions;
       remountContent();
       showSection('security');
@@ -1357,30 +1302,11 @@ function onRevokeOtherSessions() {
       settingsState().sessions = sessions;
       remountContent();
       showSection('security');
-      setStatus('security:sessions', 'Other devices signed out.');
+      setStatus('security:sessions', 'Other sessions terminated.');
     })
     .catch((err) => {
       if (btn) btn.disabled = false;
-      setStatus('security:sessions', err.message || 'Could not sign out other devices.', true);
-    });
-}
-
-function onRevokeAllSessions() {
-  const overlay = document.getElementById('nl-settings-overlay');
-  const btn = overlay?.querySelector('[data-settings-revoke-all]');
-  if (btn) btn.disabled = true;
-  revokeAllUserSessions()
-    .then(async () => {
-      await closeAccountSettings();
-      const authRoot = document.querySelector('.header_auth');
-      setDocumentAuthState(null);
-      if (authRoot) {
-        await transitionAuthChrome(authRoot, () => renderGuestAuth(authRoot));
-      }
-    })
-    .catch((err) => {
-      if (btn) btn.disabled = false;
-      setStatus('security:sessions', err.message || 'Could not sign out all devices.', true);
+      setStatus('security:sessions', err.message || 'Could not terminate other sessions.', true);
     });
 }
 
@@ -1702,8 +1628,6 @@ function bindOverlay(overlay) {
   overlay.querySelector('[data-settings-sessions]')?.addEventListener('click', onSessionRevoke);
 
   overlay.querySelector('[data-settings-revoke-others]')?.addEventListener('click', onRevokeOtherSessions);
-
-  overlay.querySelector('[data-settings-revoke-all]')?.addEventListener('click', onRevokeAllSessions);
 
   overlay.querySelector('[data-settings-2fa]')?.addEventListener('change', (e) => {
     onTwoFactorToggle(overlay, e);
@@ -2758,29 +2682,6 @@ function setDocumentAuthState(user) {
   document.dispatchEvent(new CustomEvent('numberlink:auth', {
     detail: { user: user || null },
   }));
-}
-
-function burgerIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg>`;
-}
-
-function closeMobileNav() {
-  const container = document.querySelector('.header_container');
-  const drawer = document.querySelector('.mobile-nav-drawer');
-  const scrim = document.querySelector('.mobile-nav-scrim');
-  if (!container?.classList.contains('menu-open')) return;
-
-  container.classList.remove('menu-open');
-  if (drawer) drawer.hidden = true;
-  if (scrim) scrim.hidden = true;
-  const toggle = container.querySelector('.menu_toggle');
-  if (toggle) {
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
-    toggle.innerHTML = burgerIcon();
-  }
 }
 
 function renderGuestAuth(authRoot) {

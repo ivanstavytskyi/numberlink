@@ -1,11 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import * as bootstrap from 'bootstrap';
-import '../auth-ui.js';
-
-function backendApiUrl() {
-    return '/api';
-}
+import { backendApiUrl } from '../shared/api.js';
+import '../shared/auth/auth-ui.js';
+import { initMobileNav } from '../shared/nav.js';
+import { renderSequentialPager } from '../shared/pagination.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 6;
@@ -286,25 +285,13 @@ async function loadHistory() {
 }
 
 function renderPagination(totalPages) {
-    const container = document.getElementById('history_pagination');
-    const btn = (label, page, { active = false, disabled = false, aria } = {}) => `
-        <button class="page_btn${active ? ' active' : ''}"
-            data-page="${page}" ${disabled ? 'disabled' : ''}
-            ${aria ? `aria-label="${aria}"` : ''} ${active ? 'aria-current="page"' : ''}>${label}</button>`;
-
-    let html = btn('‹', state.page - 1, { disabled: state.page === 1, aria: 'Previous page' });
-    for (let p = 1; p <= totalPages; p += 1) {
-        html += btn(String(p), p, { active: p === state.page });
-    }
-    html += btn('›', state.page + 1, { disabled: state.page === totalPages, aria: 'Next page' });
-
-    container.innerHTML = html;
-
-    container.querySelectorAll('.page_btn:not([disabled])').forEach((el) => {
-        el.addEventListener('click', () => {
-            state.page = Number(el.dataset.page);
+    renderSequentialPager(document.getElementById('history_pagination'), {
+        page: state.page,
+        totalPages,
+        onPage: (next) => {
+            state.page = next;
             renderList();
-        });
+        },
     });
 }
 
@@ -524,103 +511,6 @@ function initShareModal() {
     });
 
     document.getElementById('share_link').addEventListener('focus', (e) => e.target.select());
-}
-
-function burgerIcon() {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg>`;
-}
-
-function mobileCloseIcon() {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
-}
-
-function syncMobileHeaderBarHeight(container) {
-    if (!container) return;
-    const header = document.querySelector('header');
-    const top = header ? Math.round(header.getBoundingClientRect().bottom) : container.offsetHeight;
-    document.documentElement.style.setProperty('--mobile-header-bar-h', `${top}px`);
-}
-
-function syncMobileNavPlacement(container, drawer, navLinks) {
-    const github = container.querySelector('.header_github');
-    if (window.matchMedia('(max-width: 576px)').matches) {
-        navLinks.forEach((link) => drawer.appendChild(link));
-    } else {
-        navLinks.forEach((link) => container.insertBefore(link, github));
-    }
-}
-
-function closeMobileNav() {
-    const container = document.querySelector('.header_container');
-    const drawer = document.querySelector('.mobile-nav-drawer');
-    const scrim = document.querySelector('.mobile-nav-scrim');
-    if (!container?.classList.contains('menu-open')) return;
-
-    container.classList.remove('menu-open');
-    if (drawer) drawer.hidden = true;
-    if (scrim) scrim.hidden = true;
-    const toggle = container.querySelector('.menu_toggle');
-    if (toggle) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Open menu');
-        toggle.innerHTML = burgerIcon();
-    }
-}
-
-function initMobileNav() {
-    const header = document.querySelector('header');
-    const container = document.querySelector('.header_container');
-    if (!header || !container || container.querySelector('.menu_toggle')) return;
-
-    const navLinks = [...container.querySelectorAll('a:not(.header_github):not(.numberlink_nav)')];
-    const drawer = document.createElement('div');
-    drawer.className = 'mobile-nav-drawer';
-    drawer.hidden = true;
-    document.body.appendChild(drawer);
-
-    const scrim = document.createElement('div');
-    scrim.className = 'mobile-nav-scrim';
-    scrim.hidden = true;
-    document.body.appendChild(scrim);
-    scrim.addEventListener('click', closeMobileNav);
-
-    const mq = window.matchMedia('(max-width: 576px)');
-    syncMobileNavPlacement(container, drawer, navLinks);
-    mq.addEventListener('change', () => {
-        closeMobileNav();
-        syncMobileNavPlacement(container, drawer, navLinks);
-        syncMobileHeaderBarHeight(container);
-    });
-
-    const btn = document.createElement('button');
-    btn.className = 'menu_toggle';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Open menu');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.innerHTML = burgerIcon();
-
-    container.prepend(btn);
-    syncMobileHeaderBarHeight(container);
-    window.addEventListener('resize', () => syncMobileHeaderBarHeight(container));
-
-    btn.addEventListener('click', () => {
-        syncMobileHeaderBarHeight(container);
-        const open = container.classList.toggle('menu-open');
-        drawer.hidden = !open;
-        scrim.hidden = !open;
-        btn.setAttribute('aria-expanded', String(open));
-        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-        btn.innerHTML = open ? mobileCloseIcon() : burgerIcon();
-        requestAnimationFrame(() => {
-            btn.blur();
-        });
-    });
-
-    drawer.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', closeMobileNav);
-    });
 }
 
 function applyAuthUser(user) {
