@@ -1,13 +1,7 @@
-function backendOrigin() {
-  return '';
-}
-function backendApiUrl() {
-  return `${backendOrigin()}/api`;
-}
-
-function closeIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
-}
+import { backendOrigin, backendApiUrl } from '../api.js';
+import { escapeHtml, userInitials, resolveMediaUrl } from '../html.js';
+import { closeIcon } from '../icons.js';
+import { closeMobileNav } from '../nav.js';
 
 function gearIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.115 2.693l.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.115l-.094.319c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.693-1.115z"/></svg>`;
@@ -192,25 +186,6 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
-function userInitials(username = '') {
-  const cleaned = String(username).trim();
-  if (!cleaned) return '?';
-  const parts = cleaned.split(/[\s._-]+/).filter(Boolean);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-  return cleaned.slice(0, 2).toUpperCase();
-}
-
 function buildDraftFromUser(user) {
   const sound = localStorage.getItem('sound');
   const widthRaw = Number(localStorage.getItem('field_width'));
@@ -240,13 +215,6 @@ function mapSizeOptions(selected) {
     html += `<option value="${n}" ${Number(selected) === n ? 'selected' : ''}>${n}</option>`;
   }
   return html;
-}
-
-function resolveMediaUrl(url) {
-  if (!url) return null;
-  if (/^(data:|blob:|https?:)/i.test(url)) return url;
-  const path = url.startsWith('/') ? url : `/${url}`;
-  return `${backendOrigin()}${path}`;
 }
 
 function renderAvatarHtml(draft) {
@@ -2714,29 +2682,6 @@ function setDocumentAuthState(user) {
   document.dispatchEvent(new CustomEvent('numberlink:auth', {
     detail: { user: user || null },
   }));
-}
-
-function burgerIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg>`;
-}
-
-function closeMobileNav() {
-  const container = document.querySelector('.header_container');
-  const drawer = document.querySelector('.mobile-nav-drawer');
-  const scrim = document.querySelector('.mobile-nav-scrim');
-  if (!container?.classList.contains('menu-open')) return;
-
-  container.classList.remove('menu-open');
-  if (drawer) drawer.hidden = true;
-  if (scrim) scrim.hidden = true;
-  const toggle = container.querySelector('.menu_toggle');
-  if (toggle) {
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
-    toggle.innerHTML = burgerIcon();
-  }
 }
 
 function renderGuestAuth(authRoot) {

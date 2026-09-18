@@ -1,6 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import * as bootstrap from 'bootstrap';
+import { backendApiUrl } from './shared/api.js';
+import { closeIcon } from './shared/icons.js';
+import { closeMobileNav, initMobileNav } from './shared/nav.js';
+import './shared/auth/auth-ui.js';
 
 const cellClick = '/assets/sounds/cell_click.mp3';
 const cellConnect = '/assets/sounds/cell_connect.mp3';
@@ -9,6 +13,7 @@ const cellDisconnect = '/assets/sounds/cell_disconnect.mp3';
 import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item.js';
 
+<<<<<<< HEAD
 function backendOrigin() {
   return '';
 }
@@ -3501,6 +3506,8 @@ function initMobileNav() {
     link.addEventListener('click', closeMobileNav);
   });
 }
+=======
+>>>>>>> 03e0aaf (refactor(frontend): extract shared page modules and common styles)
 
 initMobileNav();
 
