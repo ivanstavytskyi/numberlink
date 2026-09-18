@@ -42,6 +42,7 @@
   position: absolute;
   top: 14px;
   right: 14px;
+  z-index: 2;
   width: 32px;
   height: 32px;
   display: flex;
@@ -50,7 +51,7 @@
   background: transparent;
   border: none;
   border-radius: 8px;
-  color: #a1a1aa;
+  color: #52525b;
   cursor: pointer;
   transition: color 0.15s ease, background-color 0.15s ease;
 }

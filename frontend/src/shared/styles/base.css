@@ -345,6 +345,52 @@ header .header_container > a.numberlink_nav:focus-visible {
   outline: none;
 }
 
+/* Icon buttons: reset iOS native styling and keep inline SVGs visible */
+.history_share,
+.share_close,
+.shared_close,
+.auth-dialog__close,
+.nl-settings__close,
+.win-modal__close {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  line-height: 0;
+}
+
+.history_share svg,
+.share_close svg,
+.shared_close svg,
+.auth-dialog__close svg,
+.nl-settings__close svg,
+.win-modal__close svg {
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.history_share svg {
+  width: 18px;
+  height: 18px;
+}
+
+.share_close svg,
+.shared_close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-dialog__close svg,
+.nl-settings__close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.win-modal__close svg {
+  width: 24px;
+  height: 24px;
+}
+
 @media (max-width: 576px) {
   header {
     z-index: 1003;
@@ -512,5 +558,42 @@ header .header_container > a.numberlink_nav:focus-visible {
   .mobile-nav-drawer,
   .mobile-nav-scrim {
     display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .history_share {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    color: #52525b !important;
+    border: 1px solid #e4e4e7 !important;
+    background: #fafafa !important;
+  }
+
+  .history_share svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .share_close,
+  .shared_close,
+  .auth-dialog__close,
+  .nl-settings__close {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    z-index: 2;
+  }
+
+  .share_close svg,
+  .shared_close svg,
+  .auth-dialog__close svg,
+  .nl-settings__close svg {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
   }
 }
