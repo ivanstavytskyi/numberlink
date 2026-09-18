@@ -5,6 +5,7 @@ import { backendApiUrl } from '../shared/api.js';
 import '../shared/auth/auth-ui.js';
 import { initMobileNav } from '../shared/nav.js';
 import { renderSequentialPager } from '../shared/pagination.js';
+import { mapScoreRecord, initShareModal, openShareModal } from '../shared/share.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 6;
@@ -54,29 +55,6 @@ function hintsLabel(game) {
     if (game.hints === 0) return 'no hints';
     if (game.hints === 1) return '1 hint';
     return `${game.hints} hints`;
-}
-
-function mapHistoryItem(row) {
-    const seconds = Number(row.elapsedSeconds);
-    const width = Number(row.fieldWidth);
-    const height = Number(row.fieldHeight);
-    const hints = Number(row.hints);
-    const playedAt = row.playedAt ? new Date(row.playedAt) : new Date(NaN);
-    const score = Number.isFinite(Number(row.points))
-        ? Number(row.points)
-        : Math.round(10000 / Math.max(seconds, 1));
-
-    return {
-        id: row.id,
-        playedAt,
-        size: Number.isInteger(width) ? width : 0,
-        width: Number.isInteger(width) ? width : 0,
-        height: Number.isInteger(height) ? height : width,
-        seconds: Number.isInteger(seconds) && seconds > 0 ? seconds : 0,
-        hints: Number.isInteger(hints) && hints >= 0 ? hints : 0,
-        score,
-        mapTrackId: typeof row.gameToken === 'string' && row.gameToken ? row.gameToken : null,
-    };
 }
 
 function filteredGames() {
@@ -269,7 +247,7 @@ async function loadHistory() {
 
         const data = await response.json();
         isAuthenticated = true;
-        games = (Array.isArray(data) ? data : []).map(mapHistoryItem);
+        games = (Array.isArray(data) ? data : []).map(mapScoreRecord).filter(Boolean);
         bestScore = games.reduce((max, g) => Math.max(max, g.score), 0);
         loadState = 'ready';
         renderStats();
@@ -324,193 +302,6 @@ function initPeriodDropdown() {
             renderList();
         });
     });
-}
-
-const shareOverlay = document.getElementById('share_overlay');
-let lastFocused = null;
-let closeTimer = null;
-let currentShareGame = null;
-let shareAccess = 'private';
-
-function searchUrl(token) {
-    if (!token) return `${window.location.origin}/`;
-    return `${window.location.origin}/search/${encodeURIComponent(token)}`;
-}
-
-function shareLink(game) {
-    return searchUrl(game?.mapTrackId);
-}
-
-function paintShareAccess(access) {
-    shareAccess = access === 'public' ? 'public' : 'private';
-    document.querySelectorAll('.share_access_opt').forEach((opt) => {
-        const selected = opt.dataset.access === shareAccess;
-        opt.setAttribute('aria-checked', String(selected));
-        opt.tabIndex = selected ? 0 : -1;
-    });
-}
-
-async function setShareAccess(access, { persist } = { persist: true }) {
-    paintShareAccess(access);
-    const input = document.getElementById('share_link');
-
-    if (!persist) {
-        input.value = shareLink(currentShareGame);
-        return;
-    }
-
-    if (shareAccess === 'public' && currentShareGame?.mapTrackId) {
-        const request = await fetch(`${backendApiUrl()}/share/generate`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ gameToken: currentShareGame.mapTrackId }),
-        });
-        if (!request.ok) throw new Error('Unable to generate share access link');
-        const response = await request.json();
-        input.value = searchUrl(response.shareToken);
-        return;
-    }
-
-    if (shareAccess === 'private' && currentShareGame?.mapTrackId) {
-        const request = await fetch(`${backendApiUrl()}/share/revoke`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ gameToken: currentShareGame.mapTrackId }),
-        });
-        if (!request.ok && request.status !== 404) {
-            throw new Error('Unable to revoke share token');
-        }
-        input.value = shareLink(currentShareGame);
-    }
-}
-
-async function restoreShareAccess(game) {
-    const input = document.getElementById('share_link');
-    if (!game?.mapTrackId) {
-        paintShareAccess('private');
-        input.value = shareLink(game);
-        return;
-    }
-
-    try {
-        const request = await fetch(`${backendApiUrl()}/search/${encodeURIComponent(game.mapTrackId)}`, {
-            credentials: 'include',
-            headers: { Accept: 'application/json' },
-        });
-        if (request.ok) {
-            const result = await request.json();
-            if (result.access === 'public') {
-                paintShareAccess('public');
-                input.value = searchUrl(result.shareToken || game.mapTrackId);
-                return;
-            }
-        }
-    } catch {
-        // keep private
-    }
-
-    paintShareAccess('private');
-    input.value = shareLink(game);
-}
-
-function openShareModal(game) {
-    lastFocused = document.activeElement;
-    currentShareGame = game;
-    restoreShareAccess(game).then(() => {
-        document.querySelector('.share_access_opt[aria-checked="true"]')?.focus();
-    });
-
-    document.getElementById('share_score_value').textContent = String(game.score);
-    document.getElementById('share_meta').textContent =
-        `${game.size}×${game.size} · ${formatSeconds(game.seconds)} · ${hintsLabel(game)} · ${formatDate(game.playedAt)}`;
-
-    clearTimeout(closeTimer);
-    shareOverlay.hidden = false;
-    requestAnimationFrame(() => shareOverlay.classList.add('show'));
-}
-
-function closeShareModal() {
-    if (shareOverlay.hidden) return;
-    shareOverlay.classList.remove('show');
-    closeTimer = setTimeout(() => {
-        shareOverlay.hidden = true;
-    }, 180);
-    if (lastFocused) lastFocused.focus();
-}
-
-async function copyToClipboard(text) {
-    try {
-        await navigator.clipboard.writeText(text);
-        return true;
-    } catch {
-        const input = document.getElementById('share_link');
-        input.select();
-        try {
-            return document.execCommand('copy');
-        } catch {
-            return false;
-        }
-    }
-}
-
-function flashCopied(btn) {
-    const label = btn.querySelector('[data-copy-label]');
-    const restore = label?.textContent ?? '';
-    btn.classList.add('copied');
-    if (label) label.textContent = 'Copied';
-    setTimeout(() => {
-        btn.classList.remove('copied');
-        if (label) label.textContent = restore;
-    }, 1600);
-}
-
-function initShareModal() {
-    document.getElementById('share_close').addEventListener('click', closeShareModal);
-
-    shareOverlay.addEventListener('click', (e) => {
-        if (e.target === shareOverlay) closeShareModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !shareOverlay.hidden) closeShareModal();
-    });
-
-    const accessOpts = [...document.querySelectorAll('.share_access_opt')];
-    accessOpts.forEach((opt) => {
-        opt.addEventListener('click', () => setShareAccess(opt.dataset.access));
-        opt.addEventListener('keydown', (e) => {
-            const i = accessOpts.indexOf(opt);
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                e.preventDefault();
-                const next = accessOpts[(i + 1) % accessOpts.length];
-                setShareAccess(next.dataset.access);
-                next.focus();
-            }
-            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                e.preventDefault();
-                const prev = accessOpts[(i - 1 + accessOpts.length) % accessOpts.length];
-                setShareAccess(prev.dataset.access);
-                prev.focus();
-            }
-        });
-    });
-
-    const copyLinkBtn = document.getElementById('share_copy_link');
-    copyLinkBtn.addEventListener('click', async () => {
-        if (await copyToClipboard(document.getElementById('share_link').value)) {
-            flashCopied(copyLinkBtn);
-        }
-    });
-
-    document.getElementById('share_link').addEventListener('focus', (e) => e.target.select());
 }
 
 function applyAuthUser(user) {

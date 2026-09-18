@@ -16,5 +16,5 @@ public interface ScoreService {
 
     List<ScoreHistoryDto> getHistory(UUID userId);
 
-    void addScore(UserEntity user, int elapsedSeconds, int width, int height, int hints);
+    ScoreHistoryDto addScore(UserEntity user, int elapsedSeconds, int width, int height, int hints);
 }

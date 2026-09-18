@@ -204,7 +204,7 @@ public class ScoreServiceJPA implements ScoreService {
     }
 
     @Override
-    public void addScore(UserEntity user, int elapsedSeconds, int width, int height, int hints) {
+    public ScoreHistoryDto addScore(UserEntity user, int elapsedSeconds, int width, int height, int hints) {
         if (elapsedSeconds < 1) {
             elapsedSeconds = 1;
         }
@@ -223,5 +223,16 @@ public class ScoreServiceJPA implements ScoreService {
         score.setScoreResult(points);
         score.setPlayedAt(Instant.now());
         scoreRepository.save(score);
+
+        ScoreHistoryDto scoreHistoryDto = new ScoreHistoryDto();
+        scoreHistoryDto.setGameToken(score.getGameToken());
+        scoreHistoryDto.setElapsedSeconds(score.getElapsedSeconds());
+        scoreHistoryDto.setFieldWidth(score.getFieldWidth());
+        scoreHistoryDto.setFieldHeight(score.getFieldHeight());
+        scoreHistoryDto.setHints(score.getHints());
+        scoreHistoryDto.setPoints(points);
+        scoreHistoryDto.setPlayedAt(score.getPlayedAt());
+
+        return scoreHistoryDto;
     }
 }
