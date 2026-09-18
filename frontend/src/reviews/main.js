@@ -3491,13 +3491,13 @@ initMobileNav();
 
 async function main() {
     submitComment();
+    pagePagination();
+    getAverageRate();
+    getPercentage();
+    getReviewsNumber();
 
     window.NumberLinkGuest?.whenAuthenticated(() => {
         starsInteractive();
-        pagePagination();
-        getAverageRate();
-        getPercentage();
-        getReviewsNumber();
     });
 }
 
@@ -3592,27 +3592,9 @@ function bindInteractiveStars(stars, initialValue) {
       if (rating !== null) paintStars(rating);
       else stars.forEach((s) => s.classList.remove('active'));
     });
-    star.addEventListener('click', async () => {
+    star.addEventListener('click', () => {
       rating = index;
       paintStars(index);
-      try {
-        const response = await fetch(`${backendApiUrl()}/rating`, {
-          method: 'POST',
-          credentials: 'include',
-          body: JSON.stringify({ rating: Number(rating + 1) }),
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (response.status === 401 || response.status === 403) {
-          window.NumberLinkAuth?.open('login');
-          throw new Error('Log in to rate the game.');
-        }
-        if (!response.ok) throw new Error('API Error');
-        getAverageRate();
-        getPercentage();
-        getReviewsNumber();
-      } catch (error) {
-        console.error('Error:', error);
-      }
     });
   });
 }
@@ -3623,9 +3605,8 @@ async function pagePagination() {
     const itemsPerPage = 3;
 
     async function fetchComments() {
-        if (!window.NumberLinkGuest?.isAuthenticated()) return;
         try {
-            const query = `${backendApiUrl()}/comment`;
+            const query = `${backendApiUrl()}/rating/comments`;
 
             const response = await fetch(query, {
                 method: "GET",
@@ -3633,7 +3614,8 @@ async function pagePagination() {
             });
             if (!response.ok) throw new Error('API error');
 
-            allData = (await response.json()).filter((item) => (item.comment || '').trim().length > 0);
+            const data = await response.json();
+            allData = (Array.isArray(data) ? data : []).filter((item) => (item.comment || '').trim().length > 0);
 
             if (!allData || allData.length === 0) {
                 showReviewsEmpty();
@@ -3742,11 +3724,11 @@ function ensureReviewFeedback(button) {
   return feedback;
 }
 
-async function postUserRating(value) {
+async function postUserRating(value, content) {
   const response = await fetch(`${backendApiUrl()}/rating`, {
     method: 'POST',
     credentials: 'include',
-    body: JSON.stringify({ rating: Number(value) }),
+    body: JSON.stringify({ rating: Number(value), comment: content}),
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -3762,33 +3744,6 @@ async function postUserRating(value) {
 
   if (!response.ok) {
     throw new Error(data?.message || 'Could not save rating.');
-  }
-}
-
-async function postReviewComment(content) {
-  const response = await fetch(`${backendApiUrl()}/comment`, {
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify({ comment: content }),
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  let data = null;
-  try {
-    data = await response.json();
-  } catch (_) {}
-
-  if (response.status === 401 || response.status === 403) {
-    window.NumberLinkAuth?.open('login');
-    throw new Error('Log in to post a review.');
-  }
-
-  if (!response.ok) {
-    const message =
-      data?.message === 'username not found'
-        ? 'Session not ready. Refresh the page and try again.'
-        : data?.message || 'Could not add comment.';
-    throw new Error(message);
   }
 }
 
@@ -3808,7 +3763,7 @@ async function submitComment() {
     const selectedRating = document.querySelectorAll('.interactive_stars .star.active').length;
 
     if (!content && selectedRating === 0) {
-      setFeedback('Choose a star rating or write a short review.', 'error');
+      setFeedback('Choose a star rating and write a short review.', 'error');
       return;
     }
 
@@ -3818,7 +3773,7 @@ async function submitComment() {
     }
 
     if (!content) {
-      setFeedback('Thanks — your rating is counted in the summary above.', 'success');
+      setFeedback('Write a short review before posting.', 'error');
       return;
     }
 
@@ -3826,8 +3781,7 @@ async function submitComment() {
     setFeedback('Sending…', 'pending');
 
     try {
-      await postUserRating(selectedRating);
-      await postReviewComment(content);
+      await postUserRating(selectedRating, content);
       textarea.value = '';
       setFeedback('Review published.', 'success');
       window.location.reload();
@@ -3860,8 +3814,6 @@ function convertReviewDate(date) {
 }
 
 async function getAverageRate() {
-    if (!window.NumberLinkGuest?.isAuthenticated()) return;
-
     const query = `${backendApiUrl()}/rating/avg`;
     try {
         const response = await fetch(query);
@@ -3880,8 +3832,6 @@ async function getAverageRate() {
 }
 
 async function getPercentage() {
-    if (!window.NumberLinkGuest?.isAuthenticated()) return;
-
     const percentQuery = `${backendApiUrl()}/rating/percentage`;
     const amountQuery = `${backendApiUrl()}/rating/amount`;
 
@@ -3930,8 +3880,6 @@ async function getPercentage() {
 }
 
 async function getReviewsNumber() {
-    if (!window.NumberLinkGuest?.isAuthenticated()) return;
-
     const query = `${backendApiUrl()}/rating/amount`;
     try {
         const response = await fetch(query);

@@ -107,17 +107,15 @@ public class SecurityConfig {
 
                         // Public community reads
                         .requestMatchers(HttpMethod.GET,
-                                "/api/comment",
                                 "/api/rating/avg",
                                 "/api/rating/amount",
                                 "/api/rating/percentage",
+                                "/api/rating/comments",
                                 "/api/score/sort"
                         ).permitAll()
 
                         // Writes + personal rating/score require login
                         .requestMatchers(
-                                "/api/comment",
-                                "/api/comment/**",
                                 "/api/rating",
                                 "/api/rating/**",
                                 "/api/score",
