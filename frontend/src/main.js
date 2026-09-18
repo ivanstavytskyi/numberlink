@@ -1245,11 +1245,11 @@ function openSharedResultModal({ title, score, meta, hint, empty, hideActions })
 
     document.getElementById('shared_signup').addEventListener('click', () => {
         closeSharedModal();
-        openAuth('signup');
+        setTimeout(() => window.NumberLinkAuth?.open('signup'), 200);
     });
     document.getElementById('shared_login').addEventListener('click', () => {
         closeSharedModal();
-        openAuth('login');
+        setTimeout(() => window.NumberLinkAuth?.open('login'), 200);
     });
 
     overlay.hidden = false;
