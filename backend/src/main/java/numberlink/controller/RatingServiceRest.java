@@ -2,6 +2,7 @@ package numberlink.controller;
 
 import numberlink.dto.rating.general.RatingPercentDto;
 import numberlink.dto.rating.request.RatingRequestDto;
+import numberlink.dto.rating.response.CommentResponseDto;
 import numberlink.entity.RatingEntity;
 import numberlink.entity.UserEntity;
 import numberlink.repository.RatingRepository;
@@ -74,14 +75,36 @@ public class RatingServiceRest {
 
         RatingEntity ratingEntity = ratingRepository.findByUser_Id(user.getId())
                 .orElseGet(RatingEntity::new);
+        String comment = ratingRequestDto.getComment().trim();
+        Instant now = Instant.now();
         ratingEntity.setUser(user);
         ratingEntity.setValue(ratingRequestDto.getRating());
-        ratingEntity.setRatedAt(Instant.now());
+        ratingEntity.setContent(comment);
+        ratingEntity.setRatedAt(now);
+        ratingEntity.setCommentedOn(now);
         ratingRepository.save(ratingEntity);
 
         return ResponseEntity.ok(Map.of(
                 "status", "success",
                 "value", ratingEntity.getValue()
         ));
+    }
+
+    @GetMapping("/comments")
+    public List<CommentResponseDto> getComments() {
+        return ratingRepository.findAllWithComments().stream()
+                .map(RatingServiceRest::toCommentDto)
+                .toList();
+    }
+
+    private static CommentResponseDto toCommentDto(RatingEntity rating) {
+        CommentResponseDto dto = new CommentResponseDto();
+        UserEntity user = rating.getUser();
+        dto.setPlayer(user.getUsername());
+        dto.setAvatarUrl(user.getAvatarUrl());
+        dto.setComment(rating.getContent());
+        dto.setCommentedOn(rating.getCommentedOn());
+        dto.setRating(rating.getValue());
+        return dto;
     }
 }
