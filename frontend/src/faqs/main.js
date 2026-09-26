@@ -4,3 +4,4 @@ import '../shared/auth/auth-ui.js';
 import { initMobileNav } from '../shared/nav.js';
 
 initMobileNav();
+document.body.style.opacity = '1';
