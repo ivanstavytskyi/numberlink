@@ -2806,6 +2806,7 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
         </div>
         ${getHistoryMenuItemHtml()}
         ${getSettingsGearButtonHtml()}
+        <div class="auth-menu__divider" role="separator" aria-hidden="true"></div>
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
           <span>Log out</span>
@@ -2988,10 +2989,6 @@ async function onAuthFormSubmit(auth, overlay, form) {
     if (mode === 'signup') {
       const email = form.querySelector('[name="email"]')?.value.trim() || '';
       await registerUser();
-      // Until backend stops auto-login on register, clear any session.
-      try {
-        await logoutCurrentUser();
-      } catch (_) {}
       await closeAuthAnimated();
       await refreshAuthHeader(auth);
       openVerifyEmail(email, { sentJustNow: true });

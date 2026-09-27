@@ -85,6 +85,7 @@ public class SecurityConfig {
                                 "/oauth2/**",
                                 "/error",
                                 "/actuator/health",
+                                "/actuator/prometheus",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",

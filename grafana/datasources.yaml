@@ -1,0 +1,46 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+    jsonData:
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: '(?:trace_id)=(\\w+)'
+          name: TraceID
+          url: '$${__value.raw}'
+          urlDisplayLabel: View Trace
+        - datasourceUid: tempo
+          matcherRegex: '\\[([a-fA-F0-9]{16,32})\\]'
+          name: TraceID
+          url: '$${__value.raw}'
+          urlDisplayLabel: View Trace
+
+  - name: Tempo
+    uid: tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    editable: true
+    jsonData:
+      tracesToLogsV2:
+        datasourceUid: P8E80F9AEF21F6940
+        filterByTraceID: true
+        spanStartTimeShift: '-1h'
+        spanEndTimeShift: '1h'
+      tracesToMetrics:
+        datasourceUid: PBFA97CFB590B2093
+      serviceMap:
+        datasourceUid: PBFA97CFB590B2093
+      nodeGraph:
+        enabled: true

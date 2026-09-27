@@ -11,13 +11,14 @@ services:
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
             - ./docker/nginx/proxy_params:/etc/nginx/proxy_params:ro
+            - nginx-access-logs:/var/log/nginx-access
         depends_on:
             frontend:
                 condition: service_healthy
             backend:
                 condition: service_healthy
         healthcheck:
-            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/nginx-health"]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -44,6 +45,21 @@ services:
             CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ALLOWED_ORIGIN_PATTERNS:-http://localhost:*,http://127.0.0.1:*}
             FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:7000}
             BACKEND_BASE_URL: ${BACKEND_BASE_URL:-http://localhost:8000}
+            LOGGING_PATTERN_DATEFORMAT: yyyy-MM-dd HH:mm:ss.SSS
+            JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent.jar
+            OTEL_SERVICE_NAME: numberlink
+            OTEL_RESOURCE_ATTRIBUTES: service.name=numberlink,service.namespace=numberlink
+            OTEL_TRACES_EXPORTER: otlp
+            OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://tempo:4317
+            OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: grpc
+            OTEL_METRICS_EXPORTER: prometheus
+            OTEL_EXPORTER_PROMETHEUS_PORT: "9464"
+            OTEL_EXPORTER_PROMETHEUS_HOST: 0.0.0.0
+            OTEL_LOGS_EXPORTER: otlp
+            OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://loki:3100/otlp/v1/logs
+            OTEL_EXPORTER_OTLP_LOGS_PROTOCOL: http/protobuf
+            OTEL_INSTRUMENTATION_MICROMETER_ENABLED: "false"
+            OTEL_INSTRUMENTATION_HTTP_SERVER_EXCLUDE_URLS: /actuator/.*,/favicon.ico
         build:
             context: ./backend
             dockerfile: ../docker/backend/Dockerfile
@@ -51,15 +67,20 @@ services:
             - "8000:8000"
         volumes:
             - ./backend/uploads:/app/uploads
+            - backend-logs:/app/logs
         depends_on:
             db:
                 condition: service_healthy
+            tempo:
+                condition: service_started
+            loki:
+                condition: service_started
         healthcheck:
             test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8000/actuator/health"]
             interval: 10s
             timeout: 5s
-            retries: 5
-            start_period: 30s
+            retries: 8
+            start_period: 60s
 
     frontend:
         image: frontend-image:latest
@@ -102,5 +123,75 @@ services:
         volumes:
             - pgdata:/var/lib/postgresql
 
+    promtail:
+        image: grafana/promtail:latest
+        container_name: promtail
+        volumes:
+        - backend-logs:/app/logs:ro
+        - nginx-access-logs:/var/log/nginx-access:ro
+        - ./promtail-config.yaml:/etc/promtail/config.yml
+        command: -config.file=/etc/promtail/config.yml
+        depends_on:
+            - loki
+
+    loki:
+        image: grafana/loki:latest
+        container_name: loki
+        command: -config.file=/etc/loki/local-config.yaml
+        volumes:
+        - ./loki-config.yaml:/etc/loki/local-config.yaml
+        - lokidata:/loki
+
+    postgres-exporter:
+        image: prometheuscommunity/postgres-exporter:latest
+        container_name: postgres-exporter
+        environment:
+            DATA_SOURCE_URI: db:5432/${DB_NAME}?sslmode=disable
+            DATA_SOURCE_USER: ${DB_USER}
+            DATA_SOURCE_PASS: ${DB_PASSWORD}
+        depends_on:
+            db:
+                condition: service_healthy
+
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: prometheus
+        command:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --web.enable-remote-write-receiver
+            - --enable-feature=native-histograms
+        volumes:
+        - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        - prometheusdata:/prometheus
+
+    tempo:
+        image: grafana/tempo:2.10.0
+        container_name: tempo
+        command: ["-config.file=/etc/tempo.yaml"]
+        volumes:
+            - ./tempo.yaml:/etc/tempo.yaml
+            - tempodata:/var/tempo
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        ports:
+        - "3000:3000"
+        environment:
+            GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+            GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+        volumes:
+        - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+        - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+        - ./grafana/dashboards:/etc/grafana/dashboards
+        - grafanadata:/var/lib/grafana
+
 volumes:
   pgdata:
+  grafanadata:
+  prometheusdata:
+  backend-logs:
+  tempodata:
+  lokidata:
+  nginx-access-logs:

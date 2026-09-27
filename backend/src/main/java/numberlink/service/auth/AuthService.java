@@ -464,10 +464,15 @@ public class AuthService {
         bumpSessionEpoch(user, request);
     }
 
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean signedIn = authentication != null
+                && authentication.isAuthenticated()
+                && authentication.getPrincipal() != null
+                && !"anonymousUser".equals(authentication.getPrincipal());
+        var session = request.getSession(false);
         userSessionService.revokeCurrent(request);
         SecurityContextHolder.clearContext();
-        var session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
@@ -476,6 +481,7 @@ public class AuthService {
                 request,
                 response
         );
+        return signedIn;
     }
 
     /** Unique display name for the signup form (letters, digits, underscore). */
