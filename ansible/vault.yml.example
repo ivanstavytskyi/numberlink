@@ -1,0 +1,27 @@
+---
+# Copy to vault.yml, fill in, then:
+#   ansible-vault encrypt vault.yml
+# Commit the encrypted vault.yml. Keep the vault password out of git (.vault_pass).
+
+cloudflare_api_token: "cfat_replace_me"
+
+db_url: "db:5432"
+db_name: postgres
+db_user: postgres
+db_password: "change-me"
+
+google_client_id: ""
+google_client_secret: ""
+github_client_id: ""
+github_client_secret: ""
+
+smtp_host: ""
+smtp_port: 587
+smtp_username: ""
+smtp_password: ""
+mail_from: ""
+smtp_starttls: "true"
+smtp_ssl: "false"
+
+grafana_admin_user: admin
+grafana_admin_password: "change-me"

@@ -2,6 +2,9 @@
 .env
 .env.*
 !.env.example
+ansible/vault.yml
+ansible/.vault_pass
+*.retry
 
 # Build / deps
 node_modules/

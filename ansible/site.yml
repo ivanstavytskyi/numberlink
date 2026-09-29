@@ -1,0 +1,254 @@
+---
+# First-time NumberLink on a clean Ubuntu EC2.
+# Daily deploys stay in GitHub Actions.
+#
+# On the EC2: curl .../ansible/run.sh | bash
+
+- name: NumberLink host
+  hosts: numberlink
+  gather_facts: true
+  vars_files:
+    - vault.yml
+
+  pre_tasks:
+    - name: Refuse placeholder Cloudflare token
+      ansible.builtin.assert:
+        that:
+          - cloudflare_api_token is defined
+          - cloudflare_api_token | length > 8
+          - "'replace_me' not in cloudflare_api_token"
+        fail_msg: Copy vault.yml.example to vault.yml and put a real Cloudflare token in it.
+      tags: [tls]
+
+  tasks:
+    - name: Swap file
+      tags: [base]
+      when: ansible_swaptotal_mb | int < swap_mb
+      block:
+        - name: Allocate swap
+          ansible.builtin.command:
+            cmd: fallocate -l {{ swap_mb }}M /swapfile
+            creates: /swapfile
+        - name: Restrict swap file
+          ansible.builtin.file:
+            path: /swapfile
+            owner: root
+            group: root
+            mode: "0600"
+        - name: Format swap
+          ansible.builtin.command:
+            cmd: mkswap /swapfile
+          register: mkswap
+          changed_when: mkswap.rc == 0
+          failed_when: mkswap.rc != 0 and 'already' not in (mkswap.stderr | default(''))
+        - name: Enable swap
+          ansible.builtin.command:
+            cmd: swapon /swapfile
+          register: swapon
+          changed_when: swapon.rc == 0
+          failed_when: swapon.rc != 0 and 'already' not in (swapon.stderr | default(''))
+        - name: Persist swap in fstab
+          ansible.builtin.mount:
+            src: /swapfile
+            path: none
+            fstype: swap
+            opts: sw
+            state: present
+
+    - name: Base packages
+      tags: [base, nginx, tls]
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+        name:
+          - ca-certificates
+          - curl
+          - git
+          - gnupg
+          - nginx
+          - certbot
+          - python3-certbot-dns-cloudflare
+          - python3-certbot-nginx
+        state: present
+
+    - name: Docker apt keyring directory
+      tags: [docker]
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Docker GPG key
+      tags: [docker]
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+
+    - name: Docker apt repository
+      tags: [docker]
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
+          https://download.docker.com/linux/ubuntu
+          {{ ansible_distribution_release }} stable
+        filename: docker
+        state: present
+
+    - name: Docker packages
+      tags: [docker]
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: Docker service
+      tags: [docker]
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Deploy user in docker group
+      tags: [docker]
+      ansible.builtin.user:
+        name: "{{ deploy_user }}"
+        groups: docker
+        append: true
+
+    - name: Let's Encrypt directory
+      tags: [tls]
+      ansible.builtin.file:
+        path: /etc/letsencrypt
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Cloudflare token for Certbot
+      tags: [tls]
+      ansible.builtin.copy:
+        dest: "{{ cloudflare_ini }}"
+        owner: root
+        group: root
+        mode: "0600"
+        content: |
+          dns_cloudflare_api_token = {{ cloudflare_api_token }}
+
+    - name: Certificate for apex, www, app and grafana
+      tags: [tls]
+      ansible.builtin.command:
+        cmd: >-
+          certbot certonly --non-interactive --agree-tos
+          --email {{ certbot_email }}
+          --dns-cloudflare
+          --dns-cloudflare-credentials {{ cloudflare_ini }}
+          --dns-cloudflare-propagation-seconds 60
+          --cert-name {{ domain }}
+          --expand
+          --keep-until-expiring
+          -d {{ domain }}
+          -d www.{{ domain }}
+          -d {{ app_host }}
+          -d {{ grafana_host }}
+      register: certbot
+      changed_when: >-
+        ('Successfully received certificate' in (certbot.stdout | default('')))
+        or ('Congratulations' in (certbot.stdout | default('')))
+
+    - name: Host nginx site
+      tags: [nginx]
+      ansible.builtin.template:
+        src: nginx-site.conf.j2
+        dest: "{{ nginx_site }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Enable host nginx site
+      tags: [nginx]
+      ansible.builtin.file:
+        src: "{{ nginx_site }}"
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+        force: true
+      notify: Reload nginx
+
+    - name: Nginx service
+      tags: [nginx]
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Application parent directory
+      tags: [app]
+      ansible.builtin.file:
+        path: "{{ app_parent }}"
+        state: directory
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: "0755"
+
+    - name: Clone application
+      tags: [app]
+      become: true
+      become_user: "{{ deploy_user }}"
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        version: "{{ repo_branch }}"
+        update: true
+        force: false
+
+    - name: Application env file
+      tags: [app]
+      ansible.builtin.template:
+        src: env.j2
+        dest: "{{ app_dir }}/.env"
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: "0600"
+        force: false
+
+    - name: Compose up
+      tags: [app]
+      become: true
+      become_user: "{{ deploy_user }}"
+      ansible.builtin.command:
+        cmd: docker compose up -d --build
+        chdir: "{{ app_dir }}"
+      changed_when: true
+
+    - name: Wait for API health through Compose nginx
+      tags: [app]
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ compose_proxy_port }}/actuator/health"
+        method: GET
+        status_code: 200
+      register: health
+      retries: 12
+      delay: 10
+      until: health.status == 200
+
+    - name: Wait for Grafana on loopback
+      tags: [app]
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ grafana_port }}/api/health"
+        method: GET
+        status_code: 200
+      register: grafana_health
+      retries: 12
+      delay: 5
+      until: grafana_health.status == 200
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
