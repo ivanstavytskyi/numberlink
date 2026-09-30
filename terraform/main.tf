@@ -46,13 +46,13 @@ module "network" {
 }
 
 module "ec2" {
-  source             = "./modules/ec2"
-  instance_name      = var.instance_name
-  ami_id             = local.ami_id
-  instance_type      = var.instance_type
-  key_name           = local.key_name
-  ssh_public_key     = var.ssh_public_key
-  subnet_id          = local.instance_subnet_id
+  source         = "./modules/ec2"
+  instance_name  = var.instance_name
+  ami_id         = local.ami_id
+  instance_type  = var.instance_type
+  key_name       = local.key_name
+  ssh_public_key = var.ssh_public_key
+  subnet_id      = local.instance_subnet_id
   security_group_ids = [
     module.network.app_security_group_id,
     module.network.rds_client_security_group_id,
