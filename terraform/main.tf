@@ -38,11 +38,11 @@ locals {
 }
 
 module "network" {
-  source              = "./modules/network"
-  vpc_id              = data.aws_vpc.default.id
-  app_sg_name         = local.app_sg_name
-  rds_sg_name         = local.rds_sg_name
-  rds_client_sg_name  = local.rds_client_sg_name
+  source             = "./modules/network"
+  vpc_id             = data.aws_vpc.default.id
+  app_sg_name        = local.app_sg_name
+  rds_sg_name        = local.rds_sg_name
+  rds_client_sg_name = local.rds_client_sg_name
 }
 
 module "ec2" {
@@ -60,24 +60,24 @@ module "ec2" {
 }
 
 module "rds" {
-  source              = "./modules/rds"
-  identifier          = local.db_identifier
-  subnet_group_name   = local.db_subnet_group_name
-  instance_class      = var.db_instance_class
-  allocated_storage   = var.db_allocated_storage
-  db_name             = var.db_name
-  username            = var.db_username
-  password            = var.db_password
-  subnet_ids          = local.subnet_ids
-  security_group_id   = module.network.rds_security_group_id
-  deletion_protection              = var.db_deletion_protection
-  max_allocated_storage            = var.db_max_allocated_storage
-  storage_type                     = var.db_storage_type
-  kms_key_id                       = var.db_kms_key_id
-  skip_final_snapshot              = var.db_skip_final_snapshot
-  backup_retention_period          = var.db_backup_retention_period
-  copy_tags_to_snapshot            = var.db_copy_tags_to_snapshot
-  performance_insights_enabled     = var.db_performance_insights_enabled
-  monitoring_interval              = var.db_monitoring_interval
-  monitoring_role_arn              = var.db_monitoring_role_arn
+  source                       = "./modules/rds"
+  identifier                   = local.db_identifier
+  subnet_group_name            = local.db_subnet_group_name
+  instance_class               = var.db_instance_class
+  allocated_storage            = var.db_allocated_storage
+  db_name                      = var.db_name
+  username                     = var.db_username
+  password                     = var.db_password
+  subnet_ids                   = local.subnet_ids
+  security_group_id            = module.network.rds_security_group_id
+  deletion_protection          = var.db_deletion_protection
+  max_allocated_storage        = var.db_max_allocated_storage
+  storage_type                 = var.db_storage_type
+  kms_key_id                   = var.db_kms_key_id
+  skip_final_snapshot          = var.db_skip_final_snapshot
+  backup_retention_period      = var.db_backup_retention_period
+  copy_tags_to_snapshot        = var.db_copy_tags_to_snapshot
+  performance_insights_enabled = var.db_performance_insights_enabled
+  monitoring_interval          = var.db_monitoring_interval
+  monitoring_role_arn          = var.db_monitoring_role_arn
 }
