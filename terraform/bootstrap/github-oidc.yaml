@@ -20,7 +20,7 @@ Resources:
       ClientIdList:
         - sts.amazonaws.com
       ThumbprintList:
-        - 1b511abead59c6ce207077c0bf0e57d5c1cf7c8c
+        - ffffffffffffffffffffffffffffffffffffffff
 
   GitHubActionsRole:
     Type: AWS::IAM::Role
