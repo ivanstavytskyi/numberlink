@@ -1,0 +1,19 @@
+---
+domain: fly-stack.com
+app_subdomain: numberlink
+grafana_subdomain: grafana
+app_host: "{{ app_subdomain }}.{{ domain }}"
+grafana_host: "{{ grafana_subdomain }}.{{ domain }}"
+certbot_email: "admin@{{ domain }}"
+deploy_user: ubuntu
+app_parent: "/home/{{ deploy_user }}/numberlink-service"
+app_dir: "{{ app_parent }}/numberlink"
+repo_url: https://github.com/ivanstavytskyi/Numberlink.git
+repo_branch: main
+compose_proxy_port: 8090
+grafana_port: 3000
+swap_mb: 2048
+landing_root: /var/www/fly-stack
+nginx_site: /etc/nginx/sites-available/default
+cloudflare_ini: /etc/letsencrypt/cloudflare.ini
+letsencrypt_live: "/etc/letsencrypt/live/{{ domain }}"

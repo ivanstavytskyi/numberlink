@@ -1,0 +1,4 @@
+# Local / CI secrets. Do not commit terraform.tfvars.
+
+ssh_public_key = "ssh-ed25519 AAAA... flystack public key"
+db_password    = "change-me"
