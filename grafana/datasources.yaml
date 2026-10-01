@@ -2,6 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: Prometheus
+    uid: prometheus
     type: prometheus
     access: proxy
     url: http://prometheus:9090
@@ -9,6 +10,7 @@ datasources:
     editable: true
 
   - name: Loki
+    uid: loki
     type: loki
     access: proxy
     url: http://loki:3100
@@ -16,14 +18,9 @@ datasources:
     jsonData:
       derivedFields:
         - datasourceUid: tempo
-          matcherRegex: '(?:trace_id)=(\\w+)'
+          matcherRegex: "trace_id=(\\w+)"
           name: TraceID
-          url: '$${__value.raw}'
-          urlDisplayLabel: View Trace
-        - datasourceUid: tempo
-          matcherRegex: '\\[([a-fA-F0-9]{16,32})\\]'
-          name: TraceID
-          url: '$${__value.raw}'
+          url: "$${__value.raw}"
           urlDisplayLabel: View Trace
 
   - name: Tempo
@@ -34,13 +31,16 @@ datasources:
     editable: true
     jsonData:
       tracesToLogsV2:
-        datasourceUid: P8E80F9AEF21F6940
+        datasourceUid: loki
         filterByTraceID: true
-        spanStartTimeShift: '-1h'
-        spanEndTimeShift: '1h'
+        spanStartTimeShift: "-1h"
+        spanEndTimeShift: "1h"
+        tags:
+          - key: service.name
+            value: service_name
       tracesToMetrics:
-        datasourceUid: PBFA97CFB590B2093
+        datasourceUid: prometheus
       serviceMap:
-        datasourceUid: PBFA97CFB590B2093
+        datasourceUid: prometheus
       nodeGraph:
         enabled: true
