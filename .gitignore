@@ -2,6 +2,20 @@
 .env
 .env.*
 !.env.example
+ansible/inventory.ini
+ansible/secrets.yml
+ansible/vault.yml
+ansible/.vault_pass
+*.retry
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+terraform/terraform.tfvars
+terraform/aws-iam-credentials.env
+*.tfplan
+terraform/tfplan
 
 # Build / deps
 node_modules/
